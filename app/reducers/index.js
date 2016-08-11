@@ -1,15 +1,25 @@
 import * as types from '../actions/actionTypes';
 import { combineReducers } from 'redux';
 
-const dummy = (state = { msg: 'dummy' }, action) => {
+initialState = {
+  isFetching: false,
+  error: '',
+  items: [],
+}
+
+const fetch = (state = initialState, action) => {
   switch(action.type) {
-    case types.DUMMY_ACTION:
-      return { ...state, msg: action.msg }
+    case types.FETCH_REQUEST:
+      return { ...state, isFetching: true}
+    case types.FETCH_SUCCESS:
+      return { ...state, isFetching: false, items: action.items}
+    case types.FETCH_FAILURE:
+      return { ...state, isFetching: false, error: action.error}
     default:
       return state;
   }
 }
 
 export default combineReducers({
-  dummy,
+  fetch,
 });
