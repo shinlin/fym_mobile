@@ -9,7 +9,7 @@ import {
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import * as actionCreators from './actions';
+import * as actionCreators from '../actions';
 
 class Hot99 extends Component{
 
@@ -90,7 +90,8 @@ class Hot99 extends Component{
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    marginTop: 64,
+    marginTop: 54,
+    marginBottom: 50,
   },
   rowContainer: {
     flexDirection: 'row',
