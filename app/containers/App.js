@@ -4,6 +4,7 @@ import { Scene, Router, TabBar, Modal, Schema, Actions, Reducer, ActionConst } f
 import HomeContainer from './HomeContainer';
 import SearchContainer from './SearchContainer';
 import ProfileContainer from './ProfileContainer';
+import PlayerContainer from './PlayerContainer';
 
 import TabIcon from '../components/TabIcon';
 
@@ -22,6 +23,7 @@ export default class App extends Component {
             <Scene key='explore_profile' title='CCC' icon={TabIcon} component={ProfileContainer}/>
           </Scene>
         </Scene>
+        <Scene key='player' component={PlayerContainer} />
       </Router>
     );
   }
