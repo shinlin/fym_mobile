@@ -8,10 +8,11 @@ const requestFetch = () => {
 }
 
 const receiveSuccess = (json) => {
+  console.log(json);
   return {
     type: types.FETCH_SUCCESS,
     isFetching: false,
-    items: json.top99,
+    items: json,
   }
 }
 
@@ -23,7 +24,7 @@ const receiveFailure = (error) => {
   }
 }
 
-var URL_HOT99 = 'http://www.feedyourmusic.com/top99';
+var URL_HOT99 = 'http://www.feedyourmusic.com/api/v1/top99';
 
 export const fetchItems = () => {
   return (dispatch) => {

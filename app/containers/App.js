@@ -23,7 +23,7 @@ export default class App extends Component {
             <Scene key='explore_profile' title='CCC' icon={TabIcon} component={ProfileContainer}/>
           </Scene>
         </Scene>
-        <Scene key='player' component={PlayerContainer} />
+        <Scene key='player' component={PlayerContainer} hideNavBar={true} direction='vertical'/>
       </Router>
     );
   }
