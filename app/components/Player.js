@@ -163,7 +163,7 @@ class Player extends Component {
                 thumbStyle={styles.thumbStyle}
                 onSlidingStart={() => this._isDragging = true}
                 onSlidingComplete={(value) => {
-                  RCTPlayer.seekTo(value*60)
+                  RCTPlayer.seekTo(value*60);
                   this._isDragging = false;
                 }}
               />
@@ -178,24 +178,24 @@ class Player extends Component {
                 <Text style={{fontSize:10}}>{trackInfo.rap_name}</Text>
               </View>
               <View style={{flexDirection:'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                <TouchableOpacity onPress={this._playPrev.bind(this)}>
+                <TouchableOpacity onPress={() => console.log("toggle like")}>
                   {like}
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this._playPrev.bind(this)}>
+                <TouchableOpacity onPress={() => console.log("play prev")}>
                   {prevIcon}
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this._playAndPause.bind(this)}>
                   {player.status === PLAY_STATUS.PLAYING ? pauseIcon : playIcon}
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this._playNext.bind(this)}>
+                <TouchableOpacity onPress={() => console.log("play next")}>
                   {nextIcon}
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this._playPrev.bind(this)}>
+                <TouchableOpacity onPress={() => console.log("playlist")}>
                   {playlist}
                 </TouchableOpacity>
               </View>
               <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                <TouchableOpacity style={{marginLeft: 30}} onPress={this._playPrev.bind(this)}>
+                <TouchableOpacity style={{marginLeft: 30}} onPress={() => console.log("volume mute")}>
                   {volume_mute}
                 </TouchableOpacity>
                 <Slider
@@ -208,21 +208,21 @@ class Player extends Component {
                   maximumValue={1}
                   minimumValue={0}
                 />
-                <TouchableOpacity style={{marginRight: 30}} onPress={this._playPrev.bind(this)}>
+                <TouchableOpacity style={{marginRight: 30}} onPress={() => console.log("volume up")}>
                   {volume_up}
                 </TouchableOpacity>
               </View>
               <View style={{flexDirection:'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                <TouchableOpacity onPress={this._playPrev.bind(this)}>
+                <TouchableOpacity onPress={() => console.log("share")}>
                   {share}
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this._playPrev.bind(this)}>
+                <TouchableOpacity onPress={() => console.log("shuffle")}>
                   {shuffle}
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this._playPrev.bind(this)}>
+                <TouchableOpacity onPress={() => console.log("loop")}>
                   {loop}
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this._playPrev.bind(this)}>
+                <TouchableOpacity onPress={() => console.log("more")}>
                   {more}
                 </TouchableOpacity>
               </View>
