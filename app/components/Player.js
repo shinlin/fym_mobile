@@ -50,15 +50,6 @@ class Player extends Component {
 
     this._isDragging = false;
 
-    if (props.player.status === PLAY_STATUS.PLAYING) {
-      RCTPlayer.stop();
-      RCTPlayer.seekTo(0);
-      props.actions.changePlayerStatus(PLAY_STATUS.END);
-    }
-
-    RCTPlayer.prepare(props.trackInfo.stream_url, true);
-    props.actions.changePlayerStatus(PLAY_STATUS.PLAYING);
-
     this.state = {
       viewRef: 0,
       volume: 0,
@@ -84,12 +75,21 @@ class Player extends Component {
     })
     DeviceEventEmitter.addListener('onUpdatePosition', (event) => {
       if (this._isDragging) return;
-      
+
       this.setState({
         strCurrentTime: convertMsToTime(event.currentPosition),
         currentTime: parseInt(event.currentPosition/60),
       });
     })
+
+    if (this.props.player.status === PLAY_STATUS.PLAYING) {
+      RCTPlayer.stop();
+      RCTPlayer.seekTo(0);
+      this.props.actions.changePlayerStatus(PLAY_STATUS.END);
+    }
+
+    RCTPlayer.prepare(this.props.trackInfo.stream_url, true);
+    this.props.actions.changePlayerStatus(PLAY_STATUS.PLAYING);
   }
 
   _playAndPause() {
@@ -114,6 +114,7 @@ class Player extends Component {
 
   }
 
+  // Reference : https://github.com/react-native-community/react-native-blur/issues/83
   _imageLoaded() {
     setTimeout(() => {
       this.setState({viewRef: findNodeHandle(this.refs.backgroundImage)})
@@ -155,10 +156,7 @@ class Player extends Component {
               <ProgressBar
                 style={{height:20, justifyContent:'flex-start'}}
                 value={this.state.currentTime}
-                onValueChange={(value) => {
-                  console.log(value);
-                  this.setState({time:value})}
-                }
+                onValueChange={(value) => {this.setState({time:value})}}
                 minimumValue={0}
                 maximumValue={this.state.duration}
                 trackStyle={styles.trackStyle}
