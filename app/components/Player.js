@@ -9,15 +9,20 @@ import {
   DeviceEventEmitter,
   findNodeHandle,
   Slider,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import RCTPlayer from 'react-native-player';
 import Blur from 'react-native-blur';
 import { Actions } from 'react-native-router-flux';
 import ProgressBar from 'react-native-slider';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import { CHANGE_TYPES, PLAY_STATUS } from '../constants/SongConstants';
 import { convertMsToTime } from './utils';
+import PlayerTabBar from './PlayerTabBar';
+import LyricView from './LyricView';
+import FeedbackView from './FeedbackView';
 
 const BlurView = Blur.BlurView;
 
@@ -33,7 +38,7 @@ const more = (<Icon name="ios-more" size={20} />);
 const playlist = (<Icon name="ios-list" size={20} />);
 const volume_mute = (<Icon name="ios-volume-mute" size={18} />);
 const volume_up = (<Icon name="ios-volume-up" size={18} />);
-const hideIcon = (<Icon name="ios-arrow-dropdown" size={30}/>);
+const hideIcon = (<Icon name="ios-arrow-dropdown-circle" color='lightgray' size={20}/>);
 
 
 class Player extends Component {
@@ -51,7 +56,8 @@ class Player extends Component {
     this._isDragging = false;
 
     this.state = {
-      viewRef: 0,
+      viewRef_top: 0,
+      viewRef_bottom: 0,
       volume: 0,
       strCurrentTime: '00:00',
       strDuration: '00:00',
@@ -117,9 +123,12 @@ class Player extends Component {
   // Reference : https://github.com/react-native-community/react-native-blur/issues/83
   _imageLoaded() {
     setTimeout(() => {
-      this.setState({viewRef: findNodeHandle(this.refs.backgroundImage)})
+      this.setState({
+        viewRef_top: findNodeHandle(this.refs.bgTop),
+        viewRef_bottom: findNodeHandle(this.refs.bgBottom),
+      })
     }, 500);
-  }  
+  }
 
   render() {
     const { player, trackInfo } = this.props;
@@ -127,12 +136,28 @@ class Player extends Component {
 
     return (
       <View style={styles.container}>
-
         <Image
+          ref={'bgTop'}
           style={{flex:1.5, alignSelf:'stretch'}}
           resizeMode='stretch'
           source={{uri: image_url}}>
-          <TouchableHighlight style={{top:50, left:10}} onPress={() => Actions.explore()}>
+          <BlurView
+            key='blurview_top'
+            blurRadius={10}
+            downsampleFactor={5}
+            overlayColor={'rgba(255, 250, 250, 0.8)'}
+            style={styles.blurView}
+            viewRef={this.state.viewRef_top}
+          />
+          <ScrollableTabView 
+            renderTabBar={() => <PlayerTabBar/>}
+            tabBarPosition='overlayTop'
+            >
+            <Image style={{flex:1}} tabLabel="Cover" source={{uri: image_url}} resizeMode='stretch'/>
+            <FeedbackView tabLabel="Feedback" />
+            <LyricView tabLabel="Lyric" lyric={trackInfo.lyrics_text}/>
+          </ScrollableTabView>
+          <TouchableHighlight style={{position: 'absolute', top:10, left:10}} onPress={() => Actions.explore()}>
             {hideIcon}
           </TouchableHighlight>
         </Image>
@@ -140,16 +165,17 @@ class Player extends Component {
         <Image
           source={{uri: image_url}}
           style={styles.playerControls}
-          ref={'backgroundImage'}
+          ref={'bgBottom'}
           onLoadEnd={this._imageLoaded.bind(this)}
           resizeMode='stretch'
         >
           <BlurView
+            key='blurview_bottom'
             blurRadius={10}
             downsampleFactor={5}
             overlayColor={'rgba(255, 250, 250, 0.8)'}
             style={styles.blurView}
-            viewRef={this.state.viewRef}
+            viewRef={this.state.viewRef_bottom}
           />
           <View style={{flex:1}}>
             <View style={{height:25}}>
