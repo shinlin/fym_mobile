@@ -66,27 +66,31 @@ class Player extends Component {
     }
   }
 
-  componentDidMount() {
-    DeviceEventEmitter.addListener('onPlayerStateChanged', (event) => {
-      if(event.playbackState === 4) { // READY
-        RCTPlayer.getDuration(duration => {
-          this.setState({
-          strDuration: convertMsToTime(duration),
-          duration: parseInt(duration/60),
-          })
-        });
-      } else if(event.playbackState === 5) { // ENDED
-        this.props.actions.changePlayerStatus(PLAY_STATUS.END);
-      }  
-    })
-    DeviceEventEmitter.addListener('onUpdatePosition', (event) => {
-      if (this._isDragging) return;
-
-      this.setState({
-        strCurrentTime: convertMsToTime(event.currentPosition),
-        currentTime: parseInt(event.currentPosition/60),
+  _onPlayerStateChanged(event) {
+    if(event.playbackState === 4) { // READY
+      RCTPlayer.getDuration(duration => {
+        this.setState({
+        strDuration: convertMsToTime(duration),
+        duration: parseInt(duration/60),
+        })
       });
-    })
+    } else if(event.playbackState === 5) { // ENDED
+      this.props.actions.changePlayerStatus(PLAY_STATUS.END);
+    }
+  }
+
+  _onUpdatePosition(event) {
+    if (this._isDragging) return;
+
+    this.setState({
+      strCurrentTime: convertMsToTime(event.currentPosition),
+      currentTime: parseInt(event.currentPosition/60),
+    });
+  }
+
+  componentDidMount() {
+    DeviceEventEmitter.addListener('onPlayerStateChanged', this._onPlayerStateChanged.bind(this));
+    DeviceEventEmitter.addListener('onUpdatePosition', this._onUpdatePosition.bind(this))
 
     if (this.props.player.status === PLAY_STATUS.PLAYING) {
       RCTPlayer.stop();
@@ -96,6 +100,11 @@ class Player extends Component {
 
     RCTPlayer.prepare(this.props.trackInfo.stream_url, true);
     this.props.actions.changePlayerStatus(PLAY_STATUS.PLAYING);
+  }
+
+  componentWillUnmount() {
+    DeviceEventEmitter.removeAllListeners('onPlayerStateChanged');
+    DeviceEventEmitter.removeAllListeners('onUpdatePosition');
   }
 
   _playAndPause() {
@@ -157,7 +166,7 @@ class Player extends Component {
             <FeedbackView tabLabel="Feedback" />
             <LyricView tabLabel="Lyric" lyric={trackInfo.lyrics_text}/>
           </ScrollableTabView>
-          <TouchableHighlight style={{position: 'absolute', top:10, left:10}} onPress={() => Actions.explore()}>
+          <TouchableHighlight style={{position: 'absolute', top:10, left:10}} onPress={() => Actions.pop()}>
             {hideIcon}
           </TouchableHighlight>
         </Image>
