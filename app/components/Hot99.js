@@ -39,7 +39,6 @@ class Hot99 extends Component{
   }
 
   componentDidMount() {
-    console.log("hahahah");
     this.props.actions.fetchItems();
   }
   
