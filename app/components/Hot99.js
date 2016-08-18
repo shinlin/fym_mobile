@@ -5,9 +5,12 @@ import {
   Text,
   Image,
   ListView,
+  TouchableHighlight,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Actions } from 'react-native-router-flux';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import * as actionCreators from '../actions';
 
@@ -36,6 +39,7 @@ class Hot99 extends Component{
   }
 
   componentDidMount() {
+    console.log("hahahah");
     this.props.actions.fetchItems();
   }
   
@@ -43,16 +47,17 @@ class Hot99 extends Component{
     this.setState({dataSource: this.state.dataSource.cloneWithRows(nextProps.items)});
   }
 
+  _playTrack(rowData: object) {
+    Actions.player({trackInfo: rowData});
+  }
+
+  _showMore(rowData: object) {
+
+  }
+
   _renderSeparator(sectionID, rowID) {
     return (
-      <View
-        key={`${sectionID}-${rowID}`}
-        style={{
-          height: 0.5,
-          alignSelf: 'stretch',
-          backgroundColor: 'darkgray',
-        }}
-      />
+      <View key={`${sectionID}-${rowID}`} style={styles.separator}/>
     )
   }
 
@@ -61,11 +66,21 @@ class Hot99 extends Component{
 
     return (
       <View style={styles.rowContainer}>
-        <Image style={styles.thumbnail} source={{uri:artwork_url}}/>
-        <View style={styles.textContainer}>
-          <Text numberOfLines ={1} style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>{rap_name}</Text>
-        </View>
+        <TouchableHighlight style={{flex:1}} underlayColor='transparent' onPress={this._playTrack.bind(this, rowData)}>
+          <View style={styles.rowSubContainer}>
+            <View style={styles.rank}>
+              <Text style={styles.title}>{Number(rowID)+1}</Text>
+            </View>
+            <Image style={styles.thumbnail} source={{uri:artwork_url}}/>
+            <View style={styles.textContainer}>
+              <Text numberOfLines ={1} style={styles.title}>{title}</Text>
+              <Text style={styles.subtitle}>{rap_name}</Text>
+            </View>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight style={{right:10}} underlayColor='transparent' onPress={this._showMore.bind(this, rowData)}>
+          <Icon name="ios-more" size={20}/>
+        </TouchableHighlight>
       </View>
     )
   }
@@ -94,28 +109,47 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   rowContainer: {
+    flex: 1,
     flexDirection: 'row',
+    paddingVertical: 5,
+    alignItems: 'center',
+  },
+  rowSubContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   thumbnail: {
     width: 48,
     height: 48,
   },
   textContainer: {
-    flex:1,
+    flex: 1,
     justifyContent: 'space-between',
     margin: 8,
   },
   list: {
-    backgroundColor: 'rgba( 125, 125, 125, 0.3 )'
+//    backgroundColor: 'rgba( 125, 125, 125, 0.3 )'
   },
   contentContainer: {
 //    flex:1,
   },
   title: {
-    fontSize: 13,
+    fontSize: 12,
+    color: 'black',
   },
   subtitle: {
-    fontSize: 10
+    fontSize: 10,
+    color: 'gray',
+  },
+  separator: {
+    height: 0.5,
+    alignSelf: 'stretch',
+    backgroundColor: 'darkgray',
+  },
+  rank: {
+    width: 30,
+    justifyContent: 'center',
+     alignItems: 'center',
   }
 });
 
@@ -129,7 +163,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators({ ...actionCreators }, dispatch),
+    actions: bindActionCreators(actionCreators, dispatch),
   }
 }
 

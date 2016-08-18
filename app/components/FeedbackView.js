@@ -11,7 +11,7 @@ export default class DummyView extends Component {
   }
 
   static defaultProps = {
-    text: 'DummyView',
+    text: 'Feedback View',
   }
 
   render() {
