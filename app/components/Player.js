@@ -163,7 +163,7 @@ class Player extends Component {
             tabBarPosition='overlayTop'
             >
             <Image style={{flex:1}} tabLabel="Cover" source={{uri: image_url}} resizeMode='stretch'/>
-            <FeedbackView tabLabel="Feedback" />
+            <FeedbackView tabLabel="Feedback" trackInfo={trackInfo}/>
             <LyricView tabLabel="Lyric" lyric={trackInfo.lyrics_text}/>
           </ScrollableTabView>
           <TouchableHighlight style={{position: 'absolute', top:10, left:10}} onPress={() => Actions.pop()}>
