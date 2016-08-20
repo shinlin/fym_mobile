@@ -9,6 +9,7 @@
     "react": "15.2.1",
     "react-native": "^0.31.0",
     "react-native-blur": "^1.0.1",
+    "react-native-fbsdk": "^0.3.0",
     "react-native-player": "git+https://github.com/kyo504/react-native-player.git",
     "react-native-router-flux": "^3.33.2",
     "react-native-scrollable-tab-view": "^0.5.3",
