@@ -7,14 +7,10 @@ import {
   ListView,
   TouchableHighlight,
 } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import * as actionCreators from '../actions';
-
-class Hot99 extends Component{
+export default class PopularTracks extends Component{
 
   static propTypes = {
     isFetching: React.PropTypes.bool,
@@ -39,7 +35,7 @@ class Hot99 extends Component{
   }
 
   componentDidMount() {
-    this.props.actions.fetchItems();
+    this.props.fetchItems();
   }
   
   componentWillReceiveProps(nextProps) {
@@ -48,6 +44,7 @@ class Hot99 extends Component{
 
   _playTrack(rowData: object) {
     Actions.player({trackInfo: rowData});
+    this.props.addTrack(rowData);
   }
 
   _showMore(rowData: object) {
@@ -151,19 +148,3 @@ const styles = StyleSheet.create({
      alignItems: 'center',
   }
 });
-
-const mapStateToProps = (state) => {
-  return {
-    isFetching: state.fetch.isFetching,
-    items: state.fetch.items,
-    error: state.fetch.error,
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    actions: bindActionCreators(actionCreators, dispatch),
-  }
-}
-
-module.exports = connect(mapStateToProps, mapDispatchToProps)(Hot99);
