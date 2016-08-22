@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Scene, Router, TabBar, Modal, Schema, Actions, Reducer, ActionConst } from 'react-native-router-flux'
+import { Scene, Router, TabBar } from 'react-native-router-flux'
 
 import PopularContainer from './PopularContainer';
 import SearchContainer from './SearchContainer';
@@ -8,7 +8,23 @@ import PlayerContainer from './PlayerContainer';
 import PlaylistContainer from './PlaylistContainer';
 import TabIcon from '../components/TabIcon';
 
-export default class App extends Component {
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import PopularTracks from '../components/PopularTracks';
+import * as playlistActions from '../actions/playlist';
+
+
+class App extends Component {
+
+  componentWillMount() {
+    // Load playlist
+    console.log('Component will be mounted...');
+    console.log(this.props.playlist.tracks);
+    this.props.actions.loadPlaylist();
+    console.log(this.props.playlist.tracks);
+  }
+
   render() {
     return (
       <Router key='root'>
@@ -34,3 +50,17 @@ export default class App extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    playlist: state.playlist,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    actions: bindActionCreators(playlistActions, dispatch),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

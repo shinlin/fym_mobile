@@ -4,13 +4,19 @@ var initialState = {
   tracks: [],
 }
 
-export default function player(state = initialState, action) {
+export default function playlist(state = initialState, action) {
   switch(action.type) {
   case types.ADD_TO_PLAYLIST:
     let newTracks = state.tracks.concat(action.trackInfo);
     return { tracks: newTracks }
   case types.REMOVE_FROM_PLAYLIST:
     return { tracks: state.splice(action.index, 1) }
+  case types.LOAD_PLAYLIST_FROM_DISK:
+    return { tracks: action.tracks }
+  case types.CLEAR_PLAYLIST:
+    return { tracks: [] };
+  case types.SAVE_PLAYLIST_TO_DISK:
+    return state;
   default:
       return state;
   }
