@@ -1,7 +1,6 @@
 export const CHANGE_TYPES = {
   NEXT: 'next',
-  PLAY: 'play',
-  SHUFFLE: 'shuffle'
+  PREV: 'prev',
 }
 
 export const PLAY_STATUS = {

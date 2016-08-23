@@ -6,7 +6,8 @@ import {
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import * as playlistActions from '../actions/playlist'
+import * as playlistActions from '../actions/playlist';
+import * as playerActions from '../actions/player';
 import Playlist from '../components/Playlist';
 
 class PlaylistContainer extends Component {
@@ -31,7 +32,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(playlistActions, dispatch),
+    actions: bindActionCreators({ ...playlistActions, ...playerActions }, dispatch),
   }
 }
 

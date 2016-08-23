@@ -18,11 +18,7 @@ import * as playlistActions from '../actions/playlist';
 class App extends Component {
 
   componentWillMount() {
-    // Load playlist
-    console.log('Component will be mounted...');
-    console.log(this.props.playlist.tracks);
     this.props.actions.loadPlaylist();
-    console.log(this.props.playlist.tracks);
   }
 
   render() {

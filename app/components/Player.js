@@ -25,15 +25,12 @@ import LyricView from './LyricView';
 import FeedbackView from './FeedbackView';
 
 const BlurView = Blur.BlurView;
-
 const playIcon = (<Icon name="ios-play" size={30} />);
 const pauseIcon = (<Icon name="ios-pause" size={30} />);
 const nextIcon = (<Icon name="ios-fastforward" size={30} />);
 const prevIcon = (<Icon name="ios-rewind" size={30} />);
 const like = (<Icon name="ios-heart-outline" size={20} />);
 const share = (<Icon name="ios-share-outline" size={20} />);
-const shuffle = (<Icon name="ios-shuffle" size={20} />);
-const loop = (<Icon name="ios-infinite" size={20} />);
 const more = (<Icon name="ios-more" size={20} />);
 const playlist = (<Icon name="ios-list" size={20} />);
 const volume_mute = (<Icon name="ios-volume-mute" size={18} />);
@@ -44,10 +41,18 @@ const hideIcon = (<Icon name="ios-arrow-dropdown-circle" color='lightgray' size=
 class Player extends Component {
   static propTypes = {
     trackInfo: React.PropTypes.object,
+    tracks: React.PropTypes.array,
+    currentTrackIndex: React.PropTypes.number,
+    repeat: React.PropTypes.string,
+    shuffle: React.PropTypes.string,
   }
 
   static defaultProps = {
-    trackInfo: {}
+    trackInfo: {},
+    currentTrackIndex: null,
+    tracks: [],
+    repeat: 'none',
+    shuffle: 'none',
   }
 
   constructor(props) {
@@ -64,6 +69,7 @@ class Player extends Component {
       currentTime: 0,
       duration: 0,
     }
+
   }
 
   _onPlayerStateChanged(event) {
@@ -75,7 +81,26 @@ class Player extends Component {
         })
       });
     } else if(event.playbackState === 5) { // ENDED
-      this.props.actions.changePlayerStatus(PLAY_STATUS.END);
+
+      if(this.props.shuffle === 'shuffle') {
+        if (this.props.repeat === 'single') {
+          RCTPlayer.stop();
+          RCTPlayer.seekTo(0);
+          RCTPlayer.prepare(this.props.trackInfo.stream_url, true);
+        } else {
+          this._playNext();
+        }
+      } else {
+        if(this.props.repeat === 'none') {
+          this.props.actions.changePlayerStatus(PLAY_STATUS.END);
+        } else if (this.props.repeat === 'single') {
+          RCTPlayer.stop();
+          RCTPlayer.seekTo(0);
+          RCTPlayer.prepare(this.props.trackInfo.stream_url, true);
+        } else {
+          this._playNext();
+        }
+      }
     }
   }
 
@@ -107,8 +132,26 @@ class Player extends Component {
     DeviceEventEmitter.removeAllListeners('onUpdatePosition');
   }
 
+  componentWillReceiveProps(nextProps: object) {
+    console.log("current : " + this.props.currentTrackIndex);
+    console.log("next : " + nextProps.currentTrackIndex);
+
+    if (this.props.currentTrackIndex !== nextProps.currentTrackIndex) {
+
+      // To refresh blur image...
+      this.setState({
+        viewRef_top: 0,
+        viewRef_bottom: 0,
+      })
+      
+      RCTPlayer.stop();
+      RCTPlayer.seekTo(0);
+      RCTPlayer.prepare(nextProps.trackInfo.stream_url, true);      
+    }
+  }
+
   _playAndPause() {
-    const { player, actions, trackInfo} = this.props;
+    const { player, actions, trackInfo, trackIndex, } = this.props;
     if (player.status === PLAY_STATUS.PLAYING) {
       RCTPlayer.pause();
       actions.changePlayerStatus(PLAY_STATUS.PAUSED);
@@ -122,11 +165,11 @@ class Player extends Component {
   }
 
   _playNext() {
-
+    this.props.actions.changeTrack(CHANGE_TYPES.NEXT);
   }
 
   _playPrev() {
-
+    this.props.actions.changeTrack(CHANGE_TYPES.PREV);
   }
 
   // Reference : https://github.com/react-native-community/react-native-blur/issues/83
@@ -137,6 +180,29 @@ class Player extends Component {
         viewRef_bottom: findNodeHandle(this.refs.bgBottom),
       })
     }, 500);
+  }
+
+  _onChangeRepeatMode() {
+    let mode = this.props.repeat;
+    switch(this.props.repeat) {
+      case 'none':
+        mode = 'all';
+        break;
+      case 'all':
+        mode = 'single';
+        break;
+      case 'single':
+        mode = 'none';
+        break;
+      default:
+        mode = 'none';
+    }
+
+    this.props.actions.changeRepeatMode(mode);
+  }
+
+  _onChangeShuffleMode() {
+    this.props.actions.changeShuffleMode(this.props.shuffle === 'shuffle' ? 'none' : 'shuffle');
   }
 
   render() {
@@ -216,16 +282,16 @@ class Player extends Component {
                 <TouchableOpacity onPress={() => console.log("toggle like")}>
                   {like}
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => console.log("play prev")}>
+                <TouchableOpacity onPress={this._playPrev.bind(this)}>
                   {prevIcon}
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this._playAndPause.bind(this)}>
                   {player.status === PLAY_STATUS.PLAYING ? pauseIcon : playIcon}
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => console.log("play next")}>
+                <TouchableOpacity onPress={this._playNext.bind(this)}>
                   {nextIcon}
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => console.log("playlist")}>
+                <TouchableOpacity onPress={() => console.log("Show playlist")}>
                   {playlist}
                 </TouchableOpacity>
               </View>
@@ -251,12 +317,17 @@ class Player extends Component {
                 <TouchableOpacity onPress={() => console.log("share")}>
                   {share}
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => console.log("shuffle")}>
-                  {shuffle}
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => console.log("loop")}>
-                  {loop}
-                </TouchableOpacity>
+                <TouchableHighlight underlayColor='transparent' onPress={this._onChangeShuffleMode.bind(this)}>
+                  <View style={this.props.shuffle !== 'none' ? {backgroundColor:'gray', borderRadius:5}: null}>
+                    <Icon name="ios-shuffle" size={20} style={styles.icon}/>
+                  </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor='transparent' onPress={this._onChangeRepeatMode.bind(this)}>
+                  <View style={this.props.repeat !== 'none' ? {backgroundColor:'gray', borderRadius:5} : null}>
+                    <Icon name="ios-repeat" size={20} style={styles.icon}/>
+                    { this.props.repeat === 'single' ? (<Text style={{position: 'absolute', right:5, top:3, fontSize:5}}>1</Text>) : null }
+                  </View>
+                </TouchableHighlight>
                 <TouchableOpacity onPress={() => console.log("more")}>
                   {more}
                 </TouchableOpacity>
@@ -297,7 +368,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     width: 1,
     height: 20,
-  }
+  },
+  icon: {
+    marginHorizontal: 5
+  },
 });
 
 export default Player;

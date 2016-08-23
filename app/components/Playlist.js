@@ -27,6 +27,7 @@ export default class Playlist extends Component{
 
     this.state = {
       dataSource: ds.cloneWithRows(this.props.tracks),
+      highlightedRow: null,
     }
   }
 
@@ -35,6 +36,12 @@ export default class Playlist extends Component{
   
   componentWillReceiveProps(nextProps) {
     this.setState({dataSource: this.state.dataSource.cloneWithRows(nextProps.tracks)});
+  }
+
+  _play(rowID) {
+    console.log("ID: "+rowID);
+    this.props.changeCurrentTrack(parseInt(rowID), true);
+    Actions.player();
   }
 
   _renderSeparator(sectionID, rowID) {
@@ -48,7 +55,7 @@ export default class Playlist extends Component{
 
     return (
       <View style={styles.rowContainer}>
-        <TouchableHighlight style={{flex:1}} underlayColor='transparent'>
+        <TouchableHighlight style={{flex:1}} underlayColor='transparent' onPress={this._play.bind(this, rowID)}>
           <View style={styles.rowSubContainer}>
             <Image style={styles.thumbnail} source={{uri:artwork_url}}/>
             <View style={styles.textContainer}>

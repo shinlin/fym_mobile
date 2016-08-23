@@ -43,10 +43,10 @@ export default class PopularTracks extends Component{
   }
 
   _playTrack(rowData: object) {
-    Actions.player({trackInfo: rowData});
-    this.props.addTrack(rowData);
-    console.log(this.props.playlist);
-    console.log("AAAAAA");
+    this.props.addTrack(rowData, true);
+    Actions.player();
+
+    // This is temporary action and logic should be changed...
     this.props.savePlaylist(this.props.playlist);
   }
 

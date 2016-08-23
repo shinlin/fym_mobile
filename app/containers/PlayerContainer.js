@@ -22,8 +22,14 @@ class PlayerContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log(state);
   return {
     player: state.player,
+    tracks: state.playlist.tracks,
+    currentTrackIndex: state.player.currentTrackIndex,
+    trackInfo: state.playlist.tracks[state.player.currentTrackIndex],
+    repeat: state.player.repeat,
+    shuffle: state.player.shuffle,
   }
 }
 
