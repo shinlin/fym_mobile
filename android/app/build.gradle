@@ -132,6 +132,7 @@ repositories {
 }
 
 dependencies {
+    compile project(':react-native-fbsdk')
     compile project(':react-native-blur')
     compile project(':react-native-vector-icons')
     compile project(':react-native-player')

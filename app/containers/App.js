@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Scene, Router, TabBar } from 'react-native-router-flux'
 
+import LoginContainer from './LoginContainer';
 import PopularContainer from './PopularContainer';
 import SearchContainer from './SearchContainer';
 import ProfileContainer from './ProfileContainer';
@@ -24,7 +25,8 @@ class App extends Component {
   render() {
     return (
       <Router key='root'>
-        <Scene key='explore' tabs={true} tabBarStyle={{backgroundColor:'rgba(125,125,125,0.4)'}} pressOpacity={0.9} initial={true}>
+        <Scene key='login' title='Login' component={LoginContainer} initial={true} />
+        <Scene key='explore' tabs={true} tabBarStyle={{backgroundColor:'rgba(125,125,125,0.4)'}} pressOpacity={0.9} >
           <Scene key='new_music' title='새로운 음악' icon={TabIcon} activeIcon='ios-star' inactiveIcon='ios-star-outline' initial={true}>
             <Scene key='tab_new_music' title='새로운 음악' component={SearchContainer}/> 
           </Scene>
