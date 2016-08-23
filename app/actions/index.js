@@ -8,7 +8,6 @@ const requestFetch = () => {
 }
 
 const receiveSuccess = (json) => {
-  console.log(json);
   return {
     type: types.FETCH_SUCCESS,
     isFetching: false,

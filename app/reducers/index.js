@@ -1,6 +1,7 @@
 import * as types from '../actions/actionTypes';
 import { combineReducers } from 'redux';
 import player from './player';
+import playlist from './playlist';
 
 initialState = {
   isFetching: false,
@@ -24,4 +25,5 @@ const fetch = (state = initialState, action) => {
 export default combineReducers({
   fetch,
   player,
+  playlist,
 });
