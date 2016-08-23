@@ -13,16 +13,15 @@ export const loadPlaylist = () => {
   }
 }
 
-export const savePlaylist = (tracks) => {
-  return (dispatch) => {
-    const jsonState = JSON.stringify(tracks);
-    return AsyncStorage.setItem('PLAYLIST', jsonState, () => {
-      // This is only for testing and should be removed later
-      AsyncStorage.getItem('PLAYLIST', (err, result) => {
-        //console.log(result);
-      })
+const savePlaylist = (getState) => {
+  const { playlist } = getState();
+  const jsonState = JSON.stringify(playlist);
+  AsyncStorage.setItem('PLAYLIST', jsonState, () => {
+    // This is only for testing and should be removed later
+    AsyncStorage.getItem('PLAYLIST', (err, result) => {
+      console.log(JSON.parse(result));
     })
-  }
+  })
 }
 
 export const addTrack = (trackInfo, setCurrent) => {
@@ -33,10 +32,12 @@ export const addTrack = (trackInfo, setCurrent) => {
       trackInfo,
     });
 
+    savePlaylist(getState);
+
     if (setCurrent) {
       const { tracks } = getState().playlist;
       dispatch({
-        type: types.CHANGE_PLAYER_TRACK,
+        type: types.CHANGE_CURRENT_TRACK,
         index: tracks.length-1,
       })
     }
