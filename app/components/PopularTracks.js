@@ -45,9 +45,6 @@ export default class PopularTracks extends Component{
   _playTrack(rowData: object) {
     this.props.addTrack(rowData, true);
     Actions.player();
-
-    // This is temporary action and logic should be changed...
-    this.props.savePlaylist(this.props.playlist);
   }
 
   _showMore(rowData: object) {
