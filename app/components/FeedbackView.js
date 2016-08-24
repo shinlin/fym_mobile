@@ -17,7 +17,18 @@ export default class FeedbackView extends Component {
 
   render() {
 
-    const { title, rap_name, request_msg, lyrics_score, rhythm_score, rhyme_score, flow_score, completeness_score, quick_response_msg } = this.props.trackInfo;
+    const { 
+      title, 
+      rap_name, 
+      request_msg, 
+      lyrics_score, 
+      rhythm_score, 
+      rhyme_score, 
+      flow_score, 
+      completeness_score, 
+      quick_response_msg,
+      instructor,
+    } = this.props.trackInfo;
 
     return (
       <ScrollView 
@@ -31,7 +42,7 @@ export default class FeedbackView extends Component {
         <Text style={styles.headerText}>맨토가 중점적으로 봐주었으면 하는 내용</Text>
         <Text style={styles.bodyText}>{request_msg}</Text>
         <Divider color='gray' height={0.5} style={{marginVertical:5}}/>
-        <Text style={styles.headerText}>맨토의 피드백</Text>
+        <Text style={styles.headerText}>맨토의 피드백 (by {instructor.name})</Text>
         <Text style={styles.bodyText}>박자: {rhythm_score}</Text>
         <Text style={styles.bodyText}>라임: {rhyme_score}</Text>
         <Text style={styles.bodyText}>가사: {lyrics_score}</Text>
@@ -48,10 +59,10 @@ export default class FeedbackView extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 35,
     marginHorizontal: 10,
   },
   contentContainerStyle: {
-    marginTop: 50,
     justifyContent: 'center',
   },
   headerText: {

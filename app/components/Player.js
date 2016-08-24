@@ -133,9 +133,6 @@ class Player extends Component {
   }
 
   componentWillReceiveProps(nextProps: object) {
-    console.log("current : " + this.props.currentTrackIndex);
-    console.log("next : " + nextProps.currentTrackIndex);
-
     if (this.props.currentTrackIndex !== nextProps.currentTrackIndex) {
 
       // To refresh blur image...

@@ -22,7 +22,6 @@ class PlayerContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     player: state.player,
     tracks: state.playlist.tracks,

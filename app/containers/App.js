@@ -7,12 +7,12 @@ import SearchContainer from './SearchContainer';
 import ProfileContainer from './ProfileContainer';
 import PlayerContainer from './PlayerContainer';
 import PlaylistContainer from './PlaylistContainer';
+import NewContainer from './NewContainer';
 import TabIcon from '../components/TabIcon';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import PopularTracks from '../components/PopularTracks';
 import * as playlistActions from '../actions/playlist';
 
 
@@ -28,7 +28,7 @@ class App extends Component {
         <Scene key='login' title='Login' component={LoginContainer} initial={true} />
         <Scene key='explore' tabs={true} tabBarStyle={{backgroundColor:'rgba(125,125,125,0.4)'}} pressOpacity={0.9} >
           <Scene key='new_music' title='새로운 음악' icon={TabIcon} activeIcon='ios-star' inactiveIcon='ios-star-outline' initial={true}>
-            <Scene key='tab_new_music' title='새로운 음악' component={SearchContainer}/> 
+            <Scene key='tab_new_music' title='새로운 음악' component={NewContainer}/>
           </Scene>
           <Scene key='popular_music' title='인기 음악' icon={TabIcon} activeIcon='ios-heart' inactiveIcon='ios-heart-outline' >
             <Scene key='tab_popular_music' title='인기 음악' component={PopularContainer}/>
