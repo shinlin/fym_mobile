@@ -23,20 +23,14 @@ const receiveFailure = (error) => {
   }
 }
 
-let FETCH_URL = 'http://www.feedyourmusic.com/api/v1/new_all';
+var URL_NEW = 'http://www.feedyourmusic.com/api/v1/new_all';
 
 export const fetchItems = () => {
   return (dispatch) => {
     dispatch(requestFetch());
-    return fetch(FETCH_URL)
-            .then(request => {
-              console.log(request); 
-              return request.json()
-            })
-            .then(json => dispatch(receiveSuccess(json)))
-            .catch(error => {
-              console.log('asdfasfdasfsfsaf');
-              dispatch(receiveFailure(error))
-            })
+    return fetch(URL_NEW)
+      .then(request => request.json())
+      .then(json => dispatch(receiveSuccess(json)))
+      .catch(error => dispatch(receiveFailure(error)))
   }
 }

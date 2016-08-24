@@ -39,7 +39,6 @@ export default class Playlist extends Component{
   }
 
   _play(rowID) {
-    console.log("ID: "+rowID);
     this.props.changeCurrentTrack(parseInt(rowID), true);
     Actions.player();
   }

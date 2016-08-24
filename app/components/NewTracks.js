@@ -39,8 +39,6 @@ export default class NewTracks extends Component{
   }
 
   componentDidMount() {
-    console.log('AAAASDAFAFASDFSDFS');
-    console.log(this.props);
     this.props.fetchItems();
     this._isMounted = true; 
   }

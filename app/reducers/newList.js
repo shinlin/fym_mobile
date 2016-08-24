@@ -7,7 +7,6 @@ initialState = {
 }
 
 export default fetchNewList = (state = initialState, action) => {
-  console.log(action);
   switch(action.type) {
     case types.FETCH_NEW_LIST_REQUEST:
       return { ...state, isFetching: true}
