@@ -72,27 +72,27 @@ export default class NewTracks extends Component{
       <View style={styles.rowContainer}>
         <TouchableHighlight style={{flex:1}} underlayColor='transparent' onPress={this._playTrack.bind(this, rowData)}>
           <Image 
-            style={{flex: 1, height:200, alignSelf:'stretch'}} 
+            style={styles.image} 
             resizeMode='stretch' 
             source={{uri: artwork_url.replace('badge', 'crop')}}
           >
-            <View style={{flex:1, justifyContent: 'flex-end', bottom:10}}>
-              <Text style={{backgroundColor:'rgba(0, 0, 0, 0.8)', color:'lightgray', fontSize:12, padding:2, marginBottom:2}}>{rap_name}</Text>
-              <Text style={{backgroundColor:'rgba(0, 0, 0, 0.8)', color:'white', fontSize:12, padding:2, }}>{title}</Text>
+            <View style={styles.textContainer}>
+              <Text style={[styles.text, { color:'lightgray', marginBottom:2 }]}>{rap_name}</Text>
+              <Text style={[styles.text, { color:'white' }]}>{title}</Text>
             </View>
           </Image>
         </TouchableHighlight>
         <View style={{flexDirection:'row', justifyContent:'flex-end', marginTop:8}}>
           <TouchableHighlight>
-            <View style={{flexDirection:'row', justifyContent:'center', padding:3, marginRight:5, borderRadius:2, borderColor:'gray', borderWidth:0.5}}>
+            <View style={[styles.icon, { marginRight:5 }]}>
               <Icon name="ios-headset" size={15} style={{marginHorizontal:3}}/>
-              <Text style={{fontSize:10, marginHorizontal:3}}>{playback_count}</Text> 
+              <Text style={styles.iconText}>{playback_count}</Text> 
             </View>
           </TouchableHighlight>
           <TouchableHighlight>
-            <View style={{flexDirection:'row', justifyContent:'center', padding:3, borderRadius:2, borderColor:'gray', borderWidth:0.5}}>
+            <View style={styles.icon}>
               <Icon name="ios-heart" size={15} style={{marginHorizontal:3}}/>
-              <Text style={{fontSize:10, marginHorizontal:3}}>{likes}</Text> 
+              <Text style={styles.iconText}>{likes}</Text> 
             </View>
           </TouchableHighlight>
         </View>
@@ -149,32 +149,40 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 8
   },
-  rowSubContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  image: {
+    flex: 1,
+    height: 200,
+    alignSelf: 'stretch',
   },
   textContainer: {
-    flex: 1,
-    justifyContent: 'space-between',
-    margin: 8,
+    flex:1,
+    justifyContent: 'flex-end',
+    bottom:10
   },
   list: {
-//    backgroundColor: 'rgba( 125, 125, 125, 0.3 )'
   },
   contentContainer: {
-//    flex:1,
-  },
-  title: {
-    fontSize: 12,
-    color: 'black',
-  },
-  subtitle: {
-    fontSize: 10,
-    color: 'gray',
   },
   separator: {
     height: 5,
     alignSelf: 'stretch',
     backgroundColor: 'lightgray',
   },
+  iconText: {
+    fontSize:10,
+    marginHorizontal:3
+  },
+  icon: {
+    flexDirection:'row',
+    justifyContent:'center',
+    padding:3,
+    borderRadius:2,
+    borderColor:'gray', 
+    borderWidth:0.5
+  },
+  text: {
+    backgroundColor:'rgba(0, 0, 0, 0.8)',
+    fontSize:12,
+    padding:2,
+  }
 });
