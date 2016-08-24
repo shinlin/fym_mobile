@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import PopularTracks from '../components/PopularTracks';
-import * as actionCreators from '../actions';
+import * as popularActions from '../actions/popularList';
 import * as playlistActions from '../actions/playlist';
 
 class PopularContainer extends Component {
@@ -20,18 +20,17 @@ class PopularContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
-    isFetching: state.fetch.isFetching,
-    items: state.fetch.items,
-    error: state.fetch.error,
+    isFetching: state.popularList.isFetching,
+    items: state.popularList.items,
+    error: state.popularList.error,
     playlist: state.playlist,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators({...actionCreators, ...playlistActions}, dispatch),
+    actions: bindActionCreators({...popularActions, ...playlistActions}, dispatch),
   }
 }
 

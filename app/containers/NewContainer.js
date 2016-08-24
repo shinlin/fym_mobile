@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import NewTracks from '../components/NewTracks';
-import * as actionCreators from '../actions';
+import * as newActions from '../actions/newList';
 import * as playlistActions from '../actions/playlist';
 
 class NewContainer extends Component {
@@ -21,16 +21,16 @@ class NewContainer extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isFetching: state.fetch.isFetching,
-    items: state.fetch.items,
-    error: state.fetch.error,
+    isFetching: state.newList.isFetching,
+    items: state.newList.items,
+    error: state.newList.error,
     playlist: state.playlist,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators({...actionCreators, ...playlistActions}, dispatch),
+    actions: bindActionCreators({...newActions, ...playlistActions}, dispatch),
   }
 }
 
