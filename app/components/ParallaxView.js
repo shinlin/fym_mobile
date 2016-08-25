@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 
 import Divider from './Divider';
+import { convertMsToTime } from './utils';
 
 export default class ParallaxView extends Component {
 
@@ -43,7 +44,7 @@ export default class ParallaxView extends Component {
   }
 
   _renderRow(rowData, sectionID, rowID) {
-    const { title, rap_name, artwork_url } = rowData;
+    const { title, rap_name, artwork_url, duration } = rowData;
     
     return(
       <View style={styles.rowContainer}>
@@ -56,7 +57,7 @@ export default class ParallaxView extends Component {
             </View>
           </View>
         </TouchableHighlight>
-        <Text style={{fontSize:10, marginHorizontal:5}}>00:00</Text>
+        <Text style={{fontSize:10, marginHorizontal:5}}>{convertMsToTime(duration)}</Text>
         <TouchableHighlight style={{marginHorizontal:5}} underlayColor='transparent'>
           <Icon name="ios-more" size={20}/>
         </TouchableHighlight>
