@@ -23,7 +23,7 @@ const receiveFailure = (error) => {
   }
 }
 
-var URL_POPULAR = 'http://www.feedyourmusic.com/api/v1/hot99';
+var URL_POPULAR = 'http://www.feedyourmusic.com/api/v1/top99';
 
 export const fetchItems = () => {
   return (dispatch) => {

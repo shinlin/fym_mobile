@@ -87,46 +87,55 @@ export default class ParallaxView extends Component {
     )
   }
 
-  render() {
+  _renderBackground() {
+    const { tracks } = this.props;
+
+    return (
+      <Image
+        style={{height:170, alignSelf:'stretch', opacity:0.3}}
+        resizeMode='cover'
+        source={{uri:tracks[0].artwork_url.replace('badge', 'crop')}}
+      />
+    )
+  }
+
+  _renderForeground() {
     const { tracks, instructor } = this.props;
 
     return (
+      <View style={{ height: 170, flex: 1, flexDirection: 'row', padding:10, paddingTop:60}}>
+        <View style={{width:94, height:94, flexWrap: 'wrap',flexDirection: 'row', alignItems:'flex-start'}}>
+          {tracks.map((track, index) => {
+            if(index > 3) return;
+
+            return (
+              <Image key={`${index}`} style={{width:47, height:47}} source={{uri:track.artwork_url.replace('badge', 't67x67')}}/>
+            )
+          })}
+        </View>
+        <View style={{flex:1, marginLeft:10, justifyContent:'space-between'}}>
+          <View>
+            <Text style={{color:'white', fontSize:16}}>{instructor}'s Pick</Text>
+            <Text style={{color:'white', fontSize:10}}>재생목록 (FeedYourMusic)</Text>
+            <Text style={{color:'white', fontSize:8}}>{tracks.length}곡</Text>
+          </View>
+          <View style={{flexDirection:'row', justifyContent: 'flex-end', }}>
+            <Icon name='ios-add-outline' style={{marginRight:15}} color='white' size={20}/>
+            <Icon name='ios-share-outline' style={{marginRight:15}} color='white' size={20}/>
+            <Icon name='ios-more-outline' color='white' size={20}/>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
+  render() {
+    return (
       <ParallaxScrollView
-        style={{}}
         parallaxHeaderHeight={170}
         fadeOutForeground={true}
-        renderBackground={() => (
-          <Image
-            style={{height:170, alignSelf:'stretch', opacity:0.3}}
-            resizeMode='cover'
-            source={{uri:tracks[0].artwork_url.replace('badge', 'crop')}}
-          />
-        )}
-        renderForeground={() => (
-          <View style={{ height: 170, flex: 1, flexDirection: 'row', padding:10, paddingTop:60}}>
-            <View style={{width:94, height:94, flexWrap: 'wrap',flexDirection: 'row', alignItems:'flex-start'}}>
-              {tracks.map((track, index) => {
-                if(index > 3) return;
-
-                return (
-                  <Image key={`${index}`} style={{width:47, height:47}} source={{uri:track.artwork_url.replace('badge', 't67x67')}}/>
-                )
-              })}
-            </View>
-            <View style={{flex:1, marginLeft:10, justifyContent:'space-between'}}>
-              <View>
-                <Text style={{color:'white', fontSize:16}}>{instructor}'s Pick</Text>
-                <Text style={{color:'white', fontSize:10}}>재생목록 (FeedYourMusic)</Text>
-                <Text style={{color:'white', fontSize:8}}>{tracks.length}곡</Text>
-              </View>
-              <View style={{flexDirection:'row', justifyContent: 'flex-end', }}>
-                <Icon name='ios-add-outline' style={{marginRight:15}} color='white' size={20}/>
-                <Icon name='ios-share-outline' style={{marginRight:15}} color='white' size={20}/>
-                <Icon name='ios-more-outline' color='white' size={20}/>
-              </View>
-            </View>
-          </View>
-        )}>
+        renderBackground={this._renderBackground.bind(this)}
+        renderForeground={this._renderForeground.bind(this)}>
         <ListView
           style={styles.list}
           contentContainerStyle={styles.contentContainer}
@@ -186,9 +195,4 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     backgroundColor: 'gray',
   },
-  rank: {
-    width: 30,
-    justifyContent: 'center',
-     alignItems: 'center',
-  }  
 })

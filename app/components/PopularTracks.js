@@ -42,8 +42,9 @@ export default class PopularTracks extends Component{
     this.setState({dataSource: this.state.dataSource.cloneWithRows(nextProps.items)});
   }
 
-  _playTrack(rowData: object) {
-    this.props.addTrack(rowData, true);
+  _playTrack(rowID) {
+    this.props.clearTracks();
+    this.props.addTracks(this.props.items, parseInt(rowID));
     Actions.player();
   }
 
@@ -62,7 +63,7 @@ export default class PopularTracks extends Component{
 
     return (
       <View style={styles.rowContainer}>
-        <TouchableHighlight style={{flex:1}} underlayColor='transparent' onPress={this._playTrack.bind(this, rowData)}>
+        <TouchableHighlight style={{flex:1}} underlayColor='transparent' onPress={this._playTrack.bind(this, rowID)}>
           <View style={styles.rowSubContainer}>
             <View style={styles.rank}>
               <Text style={styles.title}>{Number(rowID)+1}</Text>

@@ -16,7 +16,7 @@ export default class NewTracks extends Component{
   static propTypes = {
     isFetching: React.PropTypes.bool,
     items: React.PropTypes.array,
-    error: React.PropTypes.string,
+    error: React.PropTypes.object,
   }
 
   static defaultProps = {
@@ -54,8 +54,8 @@ export default class NewTracks extends Component{
     });
   }
 
-  _playTrack(rowData: object) {
-    this.props.addTrack(rowData, true);
+  _playTrack(rowID) {
+    this.props.addTracks(items, parseFloat(rowID));
     Actions.player();
   }
 
@@ -70,7 +70,7 @@ export default class NewTracks extends Component{
 
     return (
       <View style={styles.rowContainer}>
-        <TouchableHighlight style={{flex:1}} underlayColor='transparent' onPress={this._playTrack.bind(this, rowData)}>
+        <TouchableHighlight style={{flex:1}} underlayColor='transparent' onPress={this._playTrack.bind(this, rowID)}>
           <Image 
             style={styles.image} 
             resizeMode='stretch' 
