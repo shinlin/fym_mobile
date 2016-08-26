@@ -24,6 +24,32 @@ const savePlaylist = (getState) => {
   })
 }
 
+export const clearTracks = () => {
+  return (dispatch) => {
+    dispatch({
+      type: types.CLEAR_PLAYLIST,
+    })
+  }
+}
+
+export const addTracks = (tracks, startIndex) => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: types.ADD_TO_PLAYLIST,
+      trackInfo: tracks,
+    });
+
+    savePlaylist(getState);
+
+    if (startIndex) {
+      dispatch({
+        type: types.CHANGE_CURRENT_TRACK,
+        index: startIndex,
+      })
+    }    
+  }
+}
+
 export const addTrack = (trackInfo, setCurrent) => {
   return (dispatch, getState) => {
 

@@ -11,12 +11,12 @@ import {
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default class NewTracks extends Component{
+export default class MentorPick extends Component{
 
   static propTypes = {
     isFetching: React.PropTypes.bool,
     items: React.PropTypes.array,
-    error: React.PropTypes.object,
+    error: React.PropTypes.string,
   }
 
   static defaultProps = {
@@ -54,8 +54,8 @@ export default class NewTracks extends Component{
     });
   }
 
-  _playTrack(rowID) {
-    this.props.addTracks(items, parseFloat(rowID));
+  _playTrack(rowData: object) {
+    this.props.addTrack(rowData, true);
     Actions.player();
   }
 
@@ -65,37 +65,41 @@ export default class NewTracks extends Component{
     )
   }
 
+  _onShowList(rowData) {
+    const instructor = Object.keys(rowData)[0];
+    const tracks = rowData[instructor];
+
+    Actions.parallax({ instructor, tracks, ...this.props });    
+  }
+
   _renderRow(rowData, sectionID, rowID) {
-    const { title, rap_name, artwork_url, playback_count, likes } = rowData;
+    const instructor = Object.keys(rowData)[0];
+    const tracks = rowData[instructor];
+
+    var left = 20;  
+    var zIndex = 10;
 
     return (
       <View style={styles.rowContainer}>
-        <TouchableHighlight style={{flex:1}} underlayColor='transparent' onPress={this._playTrack.bind(this, rowID)}>
-          <Image 
-            style={styles.image} 
-            resizeMode='stretch' 
-            source={{uri: artwork_url.replace('badge', 'crop')}}
-          >
-            <View style={styles.textContainer}>
-              <Text style={[styles.text, { color:'lightgray', marginBottom:2 }]}>{rap_name}</Text>
-              <Text style={[styles.text, { color:'white' }]}>{title}</Text>
+        <TouchableHighlight style={{flex:1}} underlayColor='transparent' onPress={this._onShowList.bind(this, rowData)}>
+          <View>
+            <View style={{flex:1, height:160, flexDirection:'row', justifyContent: 'space-between', alignItems: 'center'}}>
+              {tracks.map((track, index) => {
+                if( index >= 4 ) return;
+
+                left = left - 20;
+                zIndex = zIndex -1;
+                return (
+                  <Image key={`${index}`} style={{width:100, height:100, left: left, zIndex: zIndex}} source={{uri: track.artwork_url.replace('badge', 'large')}}/>
+                )
+              })}
             </View>
-          </Image>
+            <View>
+              <Text style={{color:'white', fontSize:14}}>{Object.keys(rowData)[0]}'s Pick</Text>
+              <Text style={{color:'white', fontSize:8}}>FeedYourMusic 재생 목록</Text>
+            </View>
+          </View>
         </TouchableHighlight>
-        <View style={{flexDirection:'row', justifyContent:'flex-end', marginTop:8}}>
-          <TouchableHighlight>
-            <View style={[styles.icon, { marginRight:5 }]}>
-              <Icon name="ios-headset" size={15} style={{marginHorizontal:3}}/>
-              <Text style={styles.iconText}>{playback_count}</Text> 
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight>
-            <View style={styles.icon}>
-              <Icon name="ios-heart" size={15} style={{marginHorizontal:3}}/>
-              <Text style={styles.iconText}>{likes}</Text> 
-            </View>
-          </TouchableHighlight>
-        </View>
       </View>
     )
   }
@@ -147,7 +151,8 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flex: 1,
-    margin: 8
+    padding: 8,
+    backgroundColor: 'black'
   },
   image: {
     flex: 1,
@@ -164,9 +169,9 @@ const styles = StyleSheet.create({
   contentContainer: {
   },
   separator: {
-    height: 5,
+    height: 2,
     alignSelf: 'stretch',
-    backgroundColor: 'lightgray',
+    backgroundColor: 'white',
   },
   iconText: {
     fontSize:10,

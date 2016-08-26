@@ -7,8 +7,7 @@ var initialState = {
 export default function playlist(state = initialState, action) {
   switch(action.type) {
   case types.ADD_TO_PLAYLIST:
-    let newTracks = state.tracks.concat(action.trackInfo);
-    return { tracks: newTracks }
+    return { tracks: state.tracks.concat(action.trackInfo) }
   case types.REMOVE_FROM_PLAYLIST:
     return { tracks: state.splice(action.index, 1) }
   case types.LOAD_PLAYLIST_FROM_DISK:
