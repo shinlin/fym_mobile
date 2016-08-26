@@ -91,7 +91,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName "0.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -106,14 +106,29 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
+    signingConfigs {
+        release {
+            storeFile file(FEEDYOURMUSIC_MOBILE_STORE_FILE)
+            storePassword FEEDYOURMUSIC_MOBILE_STORE_PASSWORD
+            keyAlias FEEDYOURMUSIC_MOBILE_KEY_ALIAS
+            keyPassword FEEDYOURMUSIC_MOBILE_STORE_PASSWORD
+        }
+    }
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def formattedDate = new Date().format('yyyyMMdd_HHmmss')
+            def apkName = "feedyourmusic-mobile-v" + variant.versionName + "_" + formattedDate + ".apk"
+            output.outputFile = new File(output.outputFile.parent, apkName)
+        }
+    /**
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
@@ -124,6 +139,7 @@ android {
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
             }
         }
+    */
     }
 }
 
