@@ -16,7 +16,7 @@ export default class NewTracks extends Component{
   static propTypes = {
     isFetching: React.PropTypes.bool,
     items: React.PropTypes.array,
-    error: React.PropTypes.object,
+    error: React.PropTypes.string,
   }
 
   static defaultProps = {
@@ -55,7 +55,8 @@ export default class NewTracks extends Component{
   }
 
   _playTrack(rowID) {
-    this.props.addTracks(items, parseFloat(rowID));
+    this.props.clearTracks();
+    this.props.addTracks(this.props.items, parseFloat(rowID));
     Actions.player();
   }
 
