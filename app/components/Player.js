@@ -70,6 +70,8 @@ class Player extends Component {
       duration: 0,
     }
 
+    this._onPlayerStateChanged = this._onPlayerStateChanged.bind(this);
+    this._onUpdatePosition = this._onUpdatePosition.bind(this);
   }
 
   _onPlayerStateChanged(event) {
@@ -114,8 +116,8 @@ class Player extends Component {
   }
 
   componentDidMount() {
-    DeviceEventEmitter.addListener('onPlayerStateChanged', this._onPlayerStateChanged.bind(this));
-    DeviceEventEmitter.addListener('onUpdatePosition', this._onUpdatePosition.bind(this))
+    DeviceEventEmitter.addListener('onPlayerStateChanged', this._onPlayerStateChanged);
+    DeviceEventEmitter.addListener('onUpdatePosition', this._onUpdatePosition);
 
     if (this.props.player.status === PLAY_STATUS.PLAYING) {
       RCTPlayer.stop();
@@ -128,8 +130,8 @@ class Player extends Component {
   }
 
   componentWillUnmount() {
-    DeviceEventEmitter.removeAllListeners('onPlayerStateChanged');
-    DeviceEventEmitter.removeAllListeners('onUpdatePosition');
+    DeviceEventEmitter.removeListener('onPlayerStateChanged', this._onPlayerStateChanged);
+    DeviceEventEmitter.removeListener('onUpdatePosition', this._onUpdatePosition);
   }
 
   componentWillReceiveProps(nextProps: object) {
