@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  ScrollView,
   View,
   Text,
   Image,
@@ -19,9 +18,7 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { CHANGE_TYPES, PLAY_STATUS } from '../constants/SongConstants';
 import { convertMsToTime } from './utils';
 import PlayerTabBar from './PlayerTabBar';
-import LyricView from './LyricView';
-import FeedbackView from './FeedbackView';
-import Divider from '../components/Divider';
+import CoverView from '../components/CoverView';
 
 const playIcon = (<Icon name="ios-play" size={50} />);
 const pauseIcon = (<Icon name="ios-pause" size={50} />);
@@ -59,7 +56,7 @@ class Player extends Component {
       strDuration: '00:00',
       currentTime: 0,
       duration: 0,
-      switchMode: false,
+      showCover: true,
     }
 
     this._onPlayerStateChanged = this._onPlayerStateChanged.bind(this);
@@ -158,69 +155,16 @@ class Player extends Component {
 
   render() {
     const { player, trackInfo } = this.props;
-    let image_url = trackInfo.artwork_url.replace('badge', 't300x300');
-    const { 
-      title, 
-      rap_name, 
-      request_msg,
-      lyrics_text,
-      lyrics_score, 
-      rhythm_score, 
-      rhyme_score, 
-      flow_score, 
-      completeness_score, 
-      quick_response_msg,
-      instructor,
-    } = this.props.trackInfo;
 
-    const cover = (
-        <TouchableWithoutFeedback onPress={() => this.setState({switchMode:!this.state.switchMode})}>
-          <View style={{width: 300, height:300, elevation: 10, borderRadius:5, alignItems:'center', justifyContent:'center', backgroundColor:'white'}}>
-            <Image style={{width: 300, height:300, borderRadius:5}} source={{uri: image_url}}/>
-          </View>
-        </TouchableWithoutFeedback>
-    )
-
-    const desc = (
-      <ScrollView 
-        style={{flex: 1, marginTop: 35, marginHorizontal: 10,}}
-        contentContainerStyle={styles.contentContainerStyle}
-      >
-        <TouchableWithoutFeedback onPress={() => this.setState({switchMode:!this.state.switchMode})}>
-          <View>
-            <Text style={styles.headerText}>곡 정보</Text>
-            <Text style={styles.bodyText}>제목: {title}</Text>
-            <Text style={styles.bodyText}>래퍼: {rap_name}</Text>
-            <Divider color='gray' height={0.5} style={{marginVertical:5}}/>
-            <Text style={styles.headerText}>맨토가 중점적으로 봐주었으면 하는 내용</Text>
-            <Text style={styles.bodyText}>{request_msg}</Text>
-            <Divider color='gray' height={0.5} style={{marginVertical:5}}/>
-            <Text style={styles.headerText}>맨토의 피드백 (by {instructor.name})</Text>
-            <Text style={styles.bodyText}>박자: {rhythm_score}</Text>
-            <Text style={styles.bodyText}>라임: {rhyme_score}</Text>
-            <Text style={styles.bodyText}>가사: {lyrics_score}</Text>
-            <Text style={styles.bodyText}>플로우: {flow_score}</Text>
-            <Text style={styles.bodyText}>완성도: {completeness_score}</Text>
-            <Text style={styles.bodyText}>{quick_response_msg}</Text>
-            <Divider color='gray' height={0.5} style={{marginVertical:5}}/>
-            <Text style={styles.description}>'무료 피드백은 100자까지만 표시됩니다. 프리미엄 피드백을 통해 멘토의 A4용지 한장 이상의 자세한 피드백을 받아보세요. 당신의 곡의 첫줄부터 마지막줄까지 라임 하나까지도 상세하게 피드백 해드립니다.'</Text>          
-            <Divider color='gray' height={0.5} style={{marginVertical:5}}/>
-            <Text style={styles.headerText}>가사</Text>            
-            <Text style={{fontSize:10, color:'black', textAlign:'left'}}>{lyrics_text}</Text>
-          </View>
-        </TouchableWithoutFeedback>
-      </ScrollView>
-    )
+    console.log(trackInfo);
 
     return (
       <View style={styles.container}>
         <View style={{flex:2, alignSelf:'stretch', alignItems:'center', justifyContent:'center', backgroundColor:'white'}}>
-          {this.state.switchMode ? desc : cover}
+          <CoverView 
+            showCover={this.state.showCover} 
+            trackInfo={trackInfo} onSwitchView={() => this.setState({showCover: !this.state.showCover})}/>
         </View>
-
-        <TouchableHighlight style={{position: 'absolute', top:5, left:5}} onPress={() => Actions.pop()}>
-          <Icon name="ios-arrow-down" color='black' size={30}/>
-        </TouchableHighlight>
 
         <View style={styles.playerControls}>
           <View style={{height:25}}>
@@ -286,6 +230,10 @@ class Player extends Component {
             </View>
           </View>
         </View>
+
+        <TouchableHighlight style={{position: 'absolute', top:5, left:5}} onPress={() => Actions.pop()}>
+          <Icon name="ios-arrow-down" color='black' size={30}/>
+        </TouchableHighlight>
       </View>
     )
   }
