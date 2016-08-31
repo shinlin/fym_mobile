@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  Image,
   TouchableOpacity,
   TouchableHighlight,
   DeviceEventEmitter,
@@ -156,8 +155,6 @@ class Player extends Component {
   render() {
     const { player, trackInfo } = this.props;
 
-    console.log(trackInfo);
-
     return (
       <View style={styles.container}>
         <View style={{flex:2, alignSelf:'stretch', alignItems:'center', justifyContent:'center', backgroundColor:'white'}}>
@@ -267,22 +264,6 @@ const styles = StyleSheet.create({
   icon: {
     marginHorizontal: 5
   },
-  contentContainerStyle: {
-    justifyContent: 'center',
-  },
-  headerText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color:'black',
-    marginBottom: 10,
-  },
-  bodyText: {
-    fontSize: 10,
-  },
-  description: {
-    fontSize: 10,
-    color: 'red',
-  }
 });
 
 export default Player;
