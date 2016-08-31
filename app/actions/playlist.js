@@ -19,7 +19,7 @@ const savePlaylist = (getState) => {
   AsyncStorage.setItem('PLAYLIST', jsonState, () => {
     // This is only for testing and should be removed later
     AsyncStorage.getItem('PLAYLIST', (err, result) => {
-      console.log(JSON.parse(result));
+      //console.log(JSON.parse(result));
     })
   })
 }
