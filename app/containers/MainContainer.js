@@ -13,7 +13,7 @@ import * as playerActions from '../actions/player';
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
 
-class HomeContainer extends Component {
+class MainContainer extends Component {
   static propTypes = {
     navigationState: React.PropTypes.object,
   }
@@ -54,4 +54,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);
