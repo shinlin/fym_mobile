@@ -134,7 +134,7 @@ export default class LoginView extends Component {
     return (
       <View style={styles.container}>
         { this.loginButton() }
-        <Text onPress={() => Actions.home()}>Skip</Text>
+        <Text onPress={() => Actions.main()}>Skip</Text>
       </View>
     )
   }

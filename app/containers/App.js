@@ -14,10 +14,11 @@ import ProfileContainer from './ProfileContainer';
 import PlayerContainer from './PlayerContainer';
 import PlaylistContainer from './PlaylistContainer';
 import NewContainer from './NewContainer';
+import HomeContainer from './HomeContainer';
 import MentorPickContainer from './MentorPickContainer';
 import TabIcon from '../components/TabIcon';
 import ParallaxView from '../components/ParallaxView';
-import HomeContainer from './HomeContainer';
+import MainContainer from './MainContainer';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -87,19 +88,22 @@ class App extends Component {
       >
         <Scene key='login' title='Login' component={LoginContainer}/>
 
-        <Scene key='home' component={HomeContainer} initial={true}>
+        <Scene key='main' component={MainContainer} hideNavBar initial={true}>
           <Scene key='explore' tabs={true} tabBarStyle={{backgroundColor:'white'}} pressOpacity={0.9}>
-            <Scene key='new_music' title='새로운 음악' icon={TabIcon} activeIcon='ios-star' inactiveIcon='ios-star-outline'>
-              <Scene key='tab_new_music' title='새로운 음악' component={NewContainer}/>
+            <Scene key='home' icon={TabIcon} activeIcon='ios-home' inactiveIcon='ios-home-outline'>
+              <Scene key='tab_home' component={HomeContainer} hideNavBar/>
             </Scene>
-            <Scene key='popular_music' title='인기 음악' icon={TabIcon} activeIcon='ios-heart' inactiveIcon='ios-heart-outline' >
-              <Scene key='tab_popular_music' title='인기 음악' component={PopularContainer}/>
+            <Scene key='new_music' icon={TabIcon} activeIcon='ios-star' inactiveIcon='ios-star-outline'>
+              <Scene key='tab_new_music' component={NewContainer} hideNavBar/>
             </Scene>
-            <Scene key='recommended_music' title='추천 음악' icon={TabIcon} activeIcon='ios-checkmark-circle' inactiveIcon='ios-checkmark-circle-outline'>
-              <Scene key='tab_recommended_music' title='추천 음악' component={MentorPickContainer}/> 
+            <Scene key='popular_music' icon={TabIcon} activeIcon='ios-heart' inactiveIcon='ios-heart-outline' >
+              <Scene key='tab_popular_music' component={PopularContainer} hideNavBar/>
             </Scene>
-            <Scene key='my_music' title='나의 음악' icon={TabIcon} activeIcon='ios-musical-notes' inactiveIcon='ios-musical-notes-outline'>
-              <Scene key='tab_my_music' title='나의 음악' component={ProfileContainer}/>
+            <Scene key='recommended_music' icon={TabIcon} activeIcon='ios-checkmark-circle' inactiveIcon='ios-checkmark-circle-outline'>
+              <Scene key='tab_recommended_music' component={MentorPickContainer} hideNavBar/>
+            </Scene>
+            <Scene key='my_music' icon={TabIcon} activeIcon='ios-musical-notes' inactiveIcon='ios-musical-notes-outline'>
+              <Scene key='tab_my_music' component={ProfileContainer} hideNavBar/>
             </Scene>
           </Scene>
         </Scene>
