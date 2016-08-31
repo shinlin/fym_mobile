@@ -68,6 +68,7 @@ class StickyMiniPlayer extends Component {
       } else {
         if(this.props.repeat === 'none') {
           this.props.actions.changePlayerStatus(PLAY_STATUS.END);
+          this.props.actions.changePlayerStatus(PLAY_STATUS.PLAYING);
           this.props.actions.changeTrack(CHANGE_TYPES.NEXT);
         } else if (this.props.repeat === 'single') {
           RCTPlayer.stop();
