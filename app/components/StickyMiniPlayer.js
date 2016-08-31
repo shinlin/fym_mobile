@@ -14,13 +14,9 @@ import ProgressBar from 'react-native-slider';
 
 import { PLAY_STATUS, CHANGE_TYPES } from '../constants/SongConstants';
 
-const iconPlay = (<Icon name='ios-play' size={40} color='black'/>);
-const iconPause = (<Icon name='ios-pause' size={40} color='black'/>);
-
-
 class StickyMiniPlayer extends Component {
   static propTypes = {
-    style: React.PropTypes.object,
+
   }
 
   constructor(props) {
@@ -67,25 +63,21 @@ class StickyMiniPlayer extends Component {
           RCTPlayer.stop();
           RCTPlayer.prepare(this.props.trackInfo.stream_url, true);
         } else {
-          this._playNext();
+          this.props.actions.changeTrack(CHANGE_TYPES.NEXT);
         }
       } else {
         if(this.props.repeat === 'none') {
           this.props.actions.changePlayerStatus(PLAY_STATUS.END);
-          this._playNext();
+          this.props.actions.changeTrack(CHANGE_TYPES.NEXT);
         } else if (this.props.repeat === 'single') {
           RCTPlayer.stop();
           RCTPlayer.prepare(this.props.trackInfo.stream_url, true);
         } else {
-          this._playNext();
+          this.props.actions.changeTrack(CHANGE_TYPES.NEXT);
         }
       }
     }
   }
-
-  _playNext() {
-    this.props.actions.changeTrack(CHANGE_TYPES.NEXT);
-  }  
 
   _onUpdatePosition(event) {
     this.setState({
@@ -96,9 +88,6 @@ class StickyMiniPlayer extends Component {
 
   _onPlayPause() {
     const { player, playlist, actions } = this.props;
-
-    if (player.currentTrackIndex === -1) return;
-
     let trackInfo = playlist.tracks[player.currentTrackIndex];
 
     if (player.status === PLAY_STATUS.PLAYING) {
@@ -110,44 +99,38 @@ class StickyMiniPlayer extends Component {
     } else {
       RCTPlayer.resume();
       actions.changePlayerStatus(PLAY_STATUS.PLAYING);
-    }
-    
+    }    
   }
 
   render() {
     const { style, player, playlist, actions } = this.props;
-    let trackInfo;
-
-    if (player.currentTrackIndex === -1) {
-      trackInfo = {
-        artwork_url: 'https://unsplash.it/47/47',
-        title: 'No Title',
-        rap_name: 'No Name'
-      }
-    } else {
-      trackInfo = playlist.tracks[player.currentTrackIndex];
-    }
+    let trackInfo = player.currentTrackIndex === -1 ? null : playlist.tracks[player.currentTrackIndex]; 
 
     return (
       <View style={[styles.container, style]}>
         <View style={styles.controls}>
-          <TouchableHighlight style={{flex:1}} onPress={() => Actions.player()}>
+          <TouchableHighlight style={{flex:1}} onPress={() => Actions.player()} disabled={trackInfo === null ? true : false}>
             <View style={{flexDirection:'row', alignItems:'center'}}>
-              <Image style={{width:47, height:47, marginRight: 5}} source={{uri:trackInfo.artwork_url}} />
+              { trackInfo ? 
+                <Image style={styles.thumbnail} source={{uri:trackInfo.artwork_url}} /> 
+                : 
+                <View style={[styles.thumbnail, {backgroundColor:'lightgray', borderColor:'gray', borderWidth:1, alignItems:'center', justifyContent:'center'}]}>
+                  <Icon name='ios-musical-notes' size={30}/>
+                </View>
+              }
               <View style={{flex:1}}>
-                <Text style={{fontSize:14}} numberOfLines ={1}>{trackInfo.title}</Text>
-                <Text style={{fontSize:8}}>{trackInfo.rap_name}</Text>
+                <Text style={{fontSize:14, color:'black'}} numberOfLines ={1}>{trackInfo ? trackInfo.title : '재생목록이 비었습니다.'}</Text>
+                {trackInfo ? (<Text style={{fontSize:8}}>{trackInfo.rap_name}</Text>) : null}
               </View>
             </View>
-
           </TouchableHighlight>
           
           <View style={{flexDirection:'row', right: 0}}>
-            <TouchableHighlight style={{marginHorizontal:10}} onPress={this._onPlayPause.bind(this)}>
-              {player.status === PLAY_STATUS.PLAYING ? iconPause : iconPlay}
+            <TouchableHighlight style={{marginHorizontal:10}} onPress={this._onPlayPause.bind(this)} disabled={trackInfo === null ? true : false}>
+              <Icon name={player.status === PLAY_STATUS.PLAYING ? 'ios-pause' : 'ios-play'} size={40} color={trackInfo ? 'black' : 'gray'}/>
             </TouchableHighlight>
-            <TouchableHighlight style={{marginHorizontal:10}} onPress={() => Actions.playlist()}>
-              <Icon name='ios-list' size={40} color='black'/>
+            <TouchableHighlight style={{marginHorizontal:10}} onPress={() => Actions.playlist()} disabled={trackInfo === null ? true : false}>
+              <Icon name='ios-list' size={40} color={trackInfo ? 'black' : 'gray'}/>
             </TouchableHighlight>
           </View>
         </View>
@@ -170,17 +153,16 @@ class StickyMiniPlayer extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'rgba(200,200,200,0.9)',
-    // borderWidth:1,
-    // borderColor:'red',
   },
   controls: {
     flexDirection: 'row',
     alignItems:'center',
-//    alignSelf: 'stretch',
-//    justifyContent:'space-between',
     padding: 5,
-    // borderWidth:1,
-    // borderColor:'red',
+  },
+  thumbnail: {
+    width:47,
+    height:47,
+    marginRight: 5,   
   },
   trackStyle: {
     backgroundColor: 'gray',
@@ -191,7 +173,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     width: 1,
     height: 1,
-  },  
+  },
 })
 
 export default StickyMiniPlayer;
