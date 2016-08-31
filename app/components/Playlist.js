@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     marginTop: 54,
-    marginBottom: 50,
   },
   rowContainer: {
     flex: 1,

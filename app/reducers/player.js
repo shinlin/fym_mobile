@@ -1,7 +1,7 @@
 import * as types from '../actions/actionTypes';
 
 var initialState = {
-  currentTrackIndex: 0,
+  currentTrackIndex: -1,
   status: 'init',
   repeat: 'none',
   shuffle: 'none',
