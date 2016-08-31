@@ -12,7 +12,7 @@ import Divider from './Divider';
 export default class CoverView extends Component {
   static propTypes = {
     trackInfo: React.PropTypes.any,
-    showCover: React.PropTypes.boolean,
+    showCover: React.PropTypes.bool,
     onSwitchView: React.PropTypes.func,
   }
 
@@ -42,15 +42,15 @@ export default class CoverView extends Component {
 
     const cover = (
       <TouchableWithoutFeedback onPress={this.props.onSwitchView.bind(this)}>
-        <View style={{width: 300, height:300, elevation: 10, borderRadius:5, alignItems:'center', justifyContent:'center', backgroundColor:'white'}}>
-          <Image style={{width: 300, height:300, borderRadius:5}} source={{uri: image_url}}/>
+        <View style={styles.boxShadow}>
+          <Image style={styles.image} source={{uri: image_url}}/>
         </View>
       </TouchableWithoutFeedback>
     )
 
     const desc = (
       <ScrollView 
-        style={{flex: 1, marginTop: 35, marginHorizontal: 10,}}
+        style={styles.container}
         contentContainerStyle={styles.contentContainerStyle}
       >
         <TouchableWithoutFeedback onPress={this.props.onSwitchView.bind(this)}>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 35,
-    marginHorizontal: 10,
+    paddingHorizontal: 10,
   },
   contentContainerStyle: {
     justifyContent: 'center',
@@ -109,5 +109,26 @@ const styles = StyleSheet.create({
     fontSize:10,
     color:'black',
     textAlign:'center'
+  },
+  boxShadow: {
+    alignItems:'center',
+    justifyContent:'center',
+    width: 300,
+    height:300,
+    elevation: 10,
+    borderRadius:5,
+    backgroundColor:'white',
+    shadowColor:'gray',
+    shadowOffset: {
+      width:3,
+      height:3
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 2
+  },
+  image: {
+    width: 300,
+    height: 300,
+    borderRadius:5,
   }
 })

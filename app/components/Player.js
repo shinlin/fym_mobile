@@ -163,7 +163,9 @@ class Player extends Component {
         <View style={{flex:2, alignSelf:'stretch', alignItems:'center', justifyContent:'center', backgroundColor:'white'}}>
           <CoverView 
             showCover={this.state.showCover} 
-            trackInfo={trackInfo} onSwitchView={() => this.setState({showCover: !this.state.showCover})}/>
+            trackInfo={trackInfo}
+            onSwitchView={() => this.setState({showCover: !this.state.showCover})}
+          />
         </View>
 
         <View style={styles.playerControls}>
