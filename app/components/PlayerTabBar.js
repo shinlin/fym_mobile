@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   TouchableNativeFeedback,
   TouchableOpacity,
   Platform,
@@ -35,7 +36,6 @@ export default class PlayerTabBar extends Component {
   renderTabOption(name, page) {
     const isTabActive = this.props.activeTab === page;
     const { activeTextColor, inactiveTextColor, textStyle, activeBgColor, inactiveBgColor } = this.props;
-    const textColor = isTabActive ? activeTextColor : inactiveTextColor;
     const bgColor = isTabActive ? activeBgColor : inactiveBgColor;
     const fontWeight = isTabActive ? 'bold' : 'normal';
 
@@ -46,8 +46,8 @@ export default class PlayerTabBar extends Component {
 
     return (
       <TouchableElement key={name} onPress={() => this.props.goToPage(page)}>
-        <View style={[styles.tab, { backgroundColor: bgColor }]}>
-          <Text style={[{color: textColor, fontSize:10}, textStyle, ]}>
+        <View style={[styles.tab]}>
+          <Text style={[{color: 'black', fontSize:14, fontWeight:fontWeight}, textStyle, ]}>
             {name}
           </Text>
         </View>
@@ -57,8 +57,15 @@ export default class PlayerTabBar extends Component {
 
   render() {
     return (
-      <View style={[styles.tabs, this.props.style, ]}>
-        {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
+      <View style={{height:40, borderBottomColor:'gray', borderBottomWidth:0.5}}>
+        <ScrollView 
+          contentContainerStyle={styles.tabs}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+
+        >
+          {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
+        </ScrollView>
       </View>
     );
   }
@@ -68,15 +75,12 @@ const styles = StyleSheet.create({
   tab: {
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 15,
-    borderWidth: 0.5,
     paddingHorizontal:10,
     marginHorizontal:1,
   },
   tabs: {
     margin: 8,
-    height: 20,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
   },
 });

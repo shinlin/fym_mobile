@@ -11,6 +11,8 @@ import { DefaultRenderer } from 'react-native-router-flux';
 import StickyMiniPlayer from '../components/StickyMiniPlayer';
 import * as playerActions from '../actions/player';
 
+import BugReportButton from '../components/BugReportButton';
+
 const WINDOW_WIDTH = Dimensions.get('window').width;
 
 class MainContainer extends Component {
@@ -26,6 +28,7 @@ class MainContainer extends Component {
       <View style={{flex:1}}>
         <DefaultRenderer navigationState={children[0]} onNavigate={this.props.onNavigate} />
         <StickyMiniPlayer style={styles.player} trackInfo={this.props.trackInfo} player={this.props.player} actions={this.props.actions} playlist={this.props.playlist}/>
+        <BugReportButton/>
       </View>
     );    
   }

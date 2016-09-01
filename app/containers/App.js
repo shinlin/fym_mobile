@@ -19,6 +19,7 @@ import MentorPickContainer from './MentorPickContainer';
 import TabIcon from '../components/TabIcon';
 import ParallaxView from '../components/ParallaxView';
 import MainContainer from './MainContainer';
+import BugReportView from '../components/BugReportView';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -111,6 +112,7 @@ class App extends Component {
         <Scene key='player' component={PlayerContainer} hideNavBar animation='fadeInScene'/>
         <Scene key='parallax' component={ParallaxView}/>
         <Scene key='playlist' component={PlaylistContainer} direction='vertical'/>
+        <Scene key='bugreport' component={BugReportView} hideNavBar/>
       </Router>
     );
   }
