@@ -56,7 +56,7 @@ export default class NewTracks extends Component{
 
   _playTrack(rowID) {
     this.props.clearTracks();
-    this.props.addTracks(this.props.items, parseFloat(rowID));
+    this.props.addTracks(this.props.items, parseInt(rowID));
     Actions.player();
   }
 

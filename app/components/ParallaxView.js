@@ -14,7 +14,7 @@ import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import Divider from './Divider';
 import { convertMsToTime } from './utils';
 
-export default class ParallaxView extends Component {
+  export default class ParallaxView extends Component {
 
   static propTypes = {
 
