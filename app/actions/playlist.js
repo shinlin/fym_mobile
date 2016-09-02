@@ -41,7 +41,7 @@ export const addTracks = (tracks, startIndex) => {
 
     savePlaylist(getState);
 
-    if (startIndex) {
+    if (startIndex >= 0) {
       dispatch({
         type: types.CHANGE_CURRENT_TRACK,
         index: startIndex,

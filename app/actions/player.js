@@ -56,7 +56,7 @@ export const changeTrack = (changeType) => {
             newIndex = currentTrackIndex-1 < 0 ? racks.length-1 : currentTrackIndex-1;
           }
           break;
-        defaut:
+        default:
           newIndex = currentTrackIndex;
       }
     }

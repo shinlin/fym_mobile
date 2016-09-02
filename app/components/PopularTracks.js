@@ -43,7 +43,6 @@ export default class PopularTracks extends Component{
   }
 
   _playTrack(rowID) {
-    console.log(this.props.items);
     this.props.clearTracks();
     this.props.addTracks(this.props.items, parseInt(rowID));
     Actions.player();
