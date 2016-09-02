@@ -26,8 +26,17 @@ class MainContainer extends Component {
 
     return (
       <View style={{flex:1}}>
-        <DefaultRenderer navigationState={children[0]} onNavigate={this.props.onNavigate} />
-        <StickyMiniPlayer style={styles.player} trackInfo={this.props.trackInfo} player={this.props.player} actions={this.props.actions} playlist={this.props.playlist}/>
+        <DefaultRenderer
+          navigationState={children[0]}
+          onNavigate={this.props.onNavigate}
+        />
+        <StickyMiniPlayer
+          style={styles.player}
+          trackInfo={this.props.trackInfo}
+          player={this.props.player}
+          actions={this.props.actions}
+          playlist={this.props.playlist}
+        />
         <BugReportButton/>
       </View>
     );    

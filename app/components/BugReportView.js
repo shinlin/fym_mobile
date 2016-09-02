@@ -8,6 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import DeviceInfo from 'react-native-device-info';
 
 class BugReportView extends Component {
 
@@ -18,10 +19,20 @@ class BugReportView extends Component {
       message: '',
       height: 0,
     }
+
+    this._deviceInfo = {
+      brand: DeviceInfo.getBrand(),
+      model: DeviceInfo.getModel(),
+      systemName: DeviceInfo.getSystemName(),
+      systemVersion: DeviceInfo.getSystemVersion(),
+      appVersion: DeviceInfo.getReadableVersion(),
+    }
   }
 
-  componentDidMount() {
-    //this.refs.textinput.
+  _getFullMessage() {
+    let title = '\r\n====== Device Info =====\r\n';
+    let deviceInfo = Object.keys(this._deviceInfo).map((key) => (key + " : " + this._deviceInfo[key])).join("\r\n");
+    return this.state.message + title + deviceInfo;
   }
 
   _onSubmit() {
@@ -33,7 +44,7 @@ class BugReportView extends Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        content: this.state.message,
+        content: this._getFullMessage(),
       })
     })
     .then((response) => {
