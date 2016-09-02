@@ -16,6 +16,7 @@ class BugReportView extends Component {
 
     this.state = {
       message: '',
+      height: 0,
     }
   }
 
@@ -55,18 +56,23 @@ class BugReportView extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={}>
+        <View style={styles.header}>
           <Text style={{fontSize:14}} onPress={() => Actions.pop()}>Close</Text>
           <Text style={{fontSize:14}} onPress={this._onSubmit.bind(this)}>Submit</Text>
         </View>
-        <View style={{flex:1}}>
+        <View style={{padding:10}}>
           <TextInput            
             ref='textinput'
+            style={{height: Math.max(35, this.state.height)}}
             multiline={true}
             numberOfLines={20}
-            onChangeText={(message) => this.setState({message})}
+            onChange={(event) => this.setState({
+              message: event.nativeEvent.text,
+              height: event.nativeEvent.contentSize.height,
+            })}
             value={this.state.message}
             underlineColorAndroid='transparent'
+            autoFocus={true}
           />
         </View>
       </View>
