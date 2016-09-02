@@ -1,56 +1,65 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  View,
-  Dimensions,
 } from 'react-native';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { DefaultRenderer } from 'react-native-router-flux';
 
-import StickyMiniPlayer from '../components/StickyMiniPlayer';
-import * as playerActions from '../actions/player';
+import DummyView from '../components/DummyView';
+import PlayerTabBar from '../components/PlayerTabBar';
+import PopularTracks from '../components/PopularTracks';
+import NewTracks from '../components/NewTracks';
+import MentorPick from '../components/MentorPick';
 
-const WINDOW_WIDTH = Dimensions.get('window').width;
+import * as popularActions from '../actions/popularList';
+import * as newActions from '../actions/newList';
+import * as mentorActions from '../actions/mentorPick';
+import * as playlistActions from '../actions/playlist';
 
 class HomeContainer extends Component {
-  static propTypes = {
-    navigationState: React.PropTypes.object,
-  }
-
   render() {
-    const state = this.props.navigationState;
-    const children = state.children;
-
+    const { 
+      newTracks,
+      popularTracks,
+      mentorPick,
+      playlist,
+      player,
+      newActions,
+      popularActions,
+      mentorActions,
+    } = this.props;
+    
     return (
-      <View style={{flex:1}}>
-        <DefaultRenderer navigationState={children[0]} onNavigate={this.props.onNavigate} />
-        <StickyMiniPlayer style={styles.player} trackInfo={this.props.trackInfo} player={this.props.player} actions={this.props.actions} playlist={this.props.playlist}/>
-      </View>
-    );    
+      <ScrollableTabView 
+        renderTabBar={() => <PlayerTabBar />}
+        initialPage={0}
+      >
+        <DummyView tabLabel="For you" />
+        <NewTracks tabLabel="What's new!" items={newTracks} playlist={playlist} {...newActions}/>
+        <PopularTracks tabLabel="Popular" items={popularTracks} playlist={playlist} {...popularActions}/>
+        <MentorPick tabLabel="FYM's picks" items={mentorPick} playlist={playlist} {...mentorActions}/>
+        <DummyView tabLabel="Other's choices" />
+      </ScrollableTabView>
+    )
   }
 }
 
-const styles = StyleSheet.create({
-  player: {
-    position: 'absolute',
-    width: WINDOW_WIDTH,
-    height: 60,
-    bottom: 50,
-  }
-});
-
 const mapStateToProps = (state) => {
   return {
-    player: state.player,
+    popularTracks: state.popularList.items,
+    newTracks: state.newList.items,
+    mentorPick: state.mentorPick.items,
     playlist: state.playlist,
-    trackInfo: state.player.currentTrackIndex === -1 ? {} : state.playlist.tracks[state.player.currentTrackIndex],    
+    player: state.player,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(playerActions, dispatch), 
+    popularActions: bindActionCreators({...popularActions, ...playlistActions}, dispatch),
+    newActions: bindActionCreators({...newActions, ...playlistActions}, dispatch),
+    mentorActions: bindActionCreators({...mentorActions, ...playlistActions}, dispatch),
   }
 }
 
