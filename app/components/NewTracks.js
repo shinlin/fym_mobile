@@ -7,6 +7,7 @@ import {
   ListView,
   TouchableHighlight,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -36,6 +37,10 @@ export default class NewTracks extends Component{
       dataSource: ds.cloneWithRows([]),
       isRefreshing: false,
     }
+  }
+
+  componentWillMount() {
+//    this.props.fetchItems();
   }
 
   componentDidMount() {
@@ -108,7 +113,7 @@ export default class NewTracks extends Component{
       });
 
       this.props.fetchItems();
-    }    
+    }
   }
 
   _renderRefreshControl() {
@@ -123,18 +128,33 @@ export default class NewTracks extends Component{
     )
   }
 
+  _renderList() {
+    return (
+      <ListView
+        style={styles.list}
+        contentContainerStyle={styles.contentContainer}
+        enableEmptySections={true}
+        dataSource={this.state.dataSource}
+        renderRow={this._renderRow.bind(this)}
+        renderSeparator={this._renderSeparator.bind(this)}
+        refreshControl={this._renderRefreshControl()}
+      />
+    )
+  }
+
+  _renderAcivityIndicator() {
+    return(
+      <ActivityIndicator
+        style={styles.centering}
+        size="large"
+      />
+    )
+  }
+
   render() {
     return(
       <View style={styles.container}>
-        <ListView
-          style={styles.list}
-          contentContainerStyle={styles.contentContainer}
-          enableEmptySections={true}
-          dataSource={this.state.dataSource}
-          renderRow={this._renderRow.bind(this)}
-          renderSeparator={this._renderSeparator.bind(this)}
-          refreshControl={this._renderRefreshControl()}
-        />
+        { this.props.isFetching ? this._renderAcivityIndicator() : this._renderList() }
       </View>
     )
   }
@@ -143,6 +163,8 @@ export default class NewTracks extends Component{
 const styles = StyleSheet.create({
   container: {
     flex:1,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 50,
   },
   rowContainer: {
@@ -160,6 +182,7 @@ const styles = StyleSheet.create({
     bottom:10
   },
   list: {
+    alignSelf: 'stretch'
   },
   contentContainer: {
   },
@@ -184,5 +207,10 @@ const styles = StyleSheet.create({
     backgroundColor:'rgba(0, 0, 0, 0.8)',
     fontSize:12,
     padding:2,
+  },
+  centering: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 8,
   }
 });
