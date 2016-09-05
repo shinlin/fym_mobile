@@ -21,8 +21,20 @@ export default class CoverView extends Component {
     onSwitchView: () => {},
   }
 
-  render() {
+  renderCover(trackInfo) {
 
+    const image_url = trackInfo.artwork_url.replace('badge', 't300x300');
+
+    return (
+    <TouchableWithoutFeedback onPress={this.props.onSwitchView.bind(this)}>
+      <View style={styles.boxShadow}>
+        <Image style={styles.image} source={{uri: image_url}}/>
+      </View>
+    </TouchableWithoutFeedback>
+    )
+  }
+
+  renderDescription(trackInfo) {
     const { 
       title, 
       rap_name, 
@@ -34,21 +46,30 @@ export default class CoverView extends Component {
       flow_score, 
       completeness_score, 
       quick_response_msg,
+      instructor_id,
+      complete_date,
       instructor,
       artwork_url,
-    } = this.props.trackInfo;
+    } = trackInfo;
 
-    const image_url = artwork_url.replace('badge', 't300x300');
-
-    const cover = (
-      <TouchableWithoutFeedback onPress={this.props.onSwitchView.bind(this)}>
-        <View style={styles.boxShadow}>
-          <Image style={styles.image} source={{uri: image_url}}/>
-        </View>
-      </TouchableWithoutFeedback>
+    const incomplete_feedback = (
+      <Text style={styles.bodyText}>아직 feedback이 완료되지 않았습니다.</Text>
     )
 
-    const desc = (
+    const complete_feedback = (
+      <View>
+        <Text style={styles.bodyText}>박자: {rhythm_score}</Text>
+        <Text style={styles.bodyText}>라임: {rhyme_score}</Text>
+        <Text style={styles.bodyText}>가사: {lyrics_score}</Text>
+        <Text style={styles.bodyText}>플로우: {flow_score}</Text>
+        <Text style={styles.bodyText}>완성도: {completeness_score}</Text>
+        <Text style={styles.bodyText}>{quick_response_msg}</Text>
+        <Divider color='gray' height={0.5} style={{marginVertical:5}}/>
+        <Text style={styles.description}>'무료 피드백은 100자까지만 표시됩니다. 프리미엄 피드백을 통해 멘토의 A4용지 한장 이상의 자세한 피드백을 받아보세요. 당신의 곡의 첫줄부터 마지막줄까지 라임 하나까지도 상세하게 피드백 해드립니다.'</Text>      
+      </View>
+    )
+
+    return (
       <ScrollView 
         style={styles.container}
         contentContainerStyle={styles.contentContainerStyle}
@@ -62,15 +83,10 @@ export default class CoverView extends Component {
             <Text style={styles.headerText}>맨토가 중점적으로 봐주었으면 하는 내용</Text>
             <Text style={styles.bodyText}>{request_msg}</Text>
             <Divider color='gray' height={0.5} style={{marginVertical:5}}/>
-            <Text style={styles.headerText}>맨토의 피드백 (by {instructor.name})</Text>
-            <Text style={styles.bodyText}>박자: {rhythm_score}</Text>
-            <Text style={styles.bodyText}>라임: {rhyme_score}</Text>
-            <Text style={styles.bodyText}>가사: {lyrics_score}</Text>
-            <Text style={styles.bodyText}>플로우: {flow_score}</Text>
-            <Text style={styles.bodyText}>완성도: {completeness_score}</Text>
-            <Text style={styles.bodyText}>{quick_response_msg}</Text>
-            <Divider color='gray' height={0.5} style={{marginVertical:5}}/>
-            <Text style={styles.description}>'무료 피드백은 100자까지만 표시됩니다. 프리미엄 피드백을 통해 멘토의 A4용지 한장 이상의 자세한 피드백을 받아보세요. 당신의 곡의 첫줄부터 마지막줄까지 라임 하나까지도 상세하게 피드백 해드립니다.'</Text>          
+            <Text style={styles.headerText}>맨토의 피드백 {instructor_id > 0 ? '(by ' + instructor.name + ' )' : null}</Text>
+
+            { instructor_id && complete_date ? complete_feedback : incomplete_feedback}
+
             <Divider color='gray' height={0.5} style={{marginVertical:5}}/>
             <Text style={styles.headerText}>가사</Text>            
             <Text style={{fontSize:10, color:'black', textAlign:'left'}}>{lyrics_text}</Text>
@@ -78,8 +94,10 @@ export default class CoverView extends Component {
         </TouchableWithoutFeedback>
       </ScrollView>
     )
+  }
 
-    return ( this.props.showCover ? cover : desc );
+  render() {
+    return ( this.props.showCover ? this.renderCover(this.props.trackInfo) : this.renderDescription(this.props.trackInfo) );
   }
 }
 
