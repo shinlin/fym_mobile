@@ -22,7 +22,6 @@ export default class CoverView extends Component {
   }
 
   renderCover(trackInfo) {
-
     const image_url = trackInfo.artwork_url.replace('badge', 't300x300');
 
     return (
@@ -104,11 +103,12 @@ export default class CoverView extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignSelf: 'stretch',
     marginTop: 35,
     paddingHorizontal: 10,
   },
   contentContainerStyle: {
-    justifyContent: 'center',
+    paddingBottom: 10,
   },
   headerText: {
     fontSize: 14,
