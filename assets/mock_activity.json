@@ -1,0 +1,97 @@
+{
+  "activities": [
+    {
+      "type": "feedback",
+      "info": {
+        "user": "kyumin.cho",
+        "track": "Be Water - 크루를 나오며"
+      },
+      "date": "2015-08-12"
+    },
+    {
+      "type": "like",
+      "info": {
+        "user": "sean.park",
+        "track": "Simmy x Tre.D - I'm Still On It"
+      },
+      "date": "2015-09-12"
+    },
+    {
+      "type": "follow",
+      "info": {
+        "user": "hunkyo.jung"
+      },
+      "date": "2016-09-12"
+    },
+    {
+      "type": "publish",
+      "info": {
+        "user": "hunkyo.jung",
+        "track": "Hello World"
+      },
+      "date": "2015-10-12"
+    },
+    {
+      "type": "feedback",
+      "info": {
+        "user": "kyumin.cho",
+        "track": "Be Water - 크루를 나오며"
+      },
+      "date": "2015-08-12"
+    },
+    {
+      "type": "like",
+      "info": {
+        "user": "sean.park",
+        "track": "Simmy x Tre.D - I'm Still On It"
+      },
+      "date": "2015-09-12"
+    },
+    {
+      "type": "follow",
+      "info": {
+        "user": "hunkyo.jung"
+      },
+      "date": "2016-09-12"
+    },
+    {
+      "type": "publish",
+      "info": {
+        "user": "hunkyo.jung",
+        "track": "Hello World"
+      },
+      "date": "2015-10-12"
+    },
+    {
+      "type": "feedback",
+      "info": {
+        "user": "kyumin.cho",
+        "track": "Be Water - 크루를 나오며"
+      },
+      "date": "2015-08-12"
+    },
+    {
+      "type": "like",
+      "info": {
+        "user": "sean.park",
+        "track": "Simmy x Tre.D - I'm Still On It"
+      },
+      "date": "2015-09-12"
+    },
+    {
+      "type": "follow",
+      "info": {
+        "user": "hunkyo.jung"
+      },
+      "date": "2016-09-12"
+    },
+    {
+      "type": "publish",
+      "info": {
+        "user": "hunkyo.jung",
+        "track": "This is the last one"
+      },
+      "date": "2015-10-12"
+    }  
+  ]
+}

@@ -17,8 +17,8 @@ class BugReportButton extends Component {
     super(props);
 
     this._panResponder = {};
-    this._previousLeft = 0;
-    this._previousTop = 0;
+    this._previousLeft = props.style.left;
+    this._previousTop = props.style.top;
     this._circleStyles = {};
   }
 
@@ -31,12 +31,11 @@ class BugReportButton extends Component {
       onPanResponderRelease: this._handlePanResponderEnd.bind(this),
       onPanResponderTerminate: this._handlePanResponderEnd.bind(this),
     });
-    this._previousLeft = 0;
-    this._previousTop = 0;
+
     this._circleStyles = {
       style: {
         left: this._previousLeft,
-        top: this._previousTop,
+        top: this._previousTop,        
       }
     };
   }

@@ -14,6 +14,7 @@ import * as playerActions from '../actions/player';
 import BugReportButton from '../components/BugReportButton';
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
+const WINDOW_HEIGHT = Dimensions.get('window').height;
 
 class MainContainer extends Component {
   static propTypes = {
@@ -37,7 +38,7 @@ class MainContainer extends Component {
           actions={this.props.actions}
           playlist={this.props.playlist}
         />
-        <BugReportButton/>
+        <BugReportButton style={styles.button}/>
       </View>
     );    
   }
@@ -49,6 +50,11 @@ const styles = StyleSheet.create({
     width: WINDOW_WIDTH,
     height: 60,
     bottom: 50,
+  },
+  button: {
+    position: 'absolute',
+    left: WINDOW_WIDTH-100,
+    top: WINDOW_HEIGHT-200,
   }
 });
 
