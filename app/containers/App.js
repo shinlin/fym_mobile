@@ -7,18 +7,17 @@ import {
 } from 'react-native';
 import { Scene, Router, TabBar, DefaultRenderer } from 'react-native-router-flux'
 
+import MainContainer from './MainContainer';
 import LoginContainer from './LoginContainer';
-import PopularContainer from './PopularContainer';
+import HomeContainer from './HomeContainer';
 import SearchContainer from './SearchContainer';
-import ProfileContainer from './ProfileContainer';
+import PublishContainer from './PublishContainer';
+import ActivityContainer from './ActivityContainer';
+import UserContainer from './UserContainer';
 import PlayerContainer from './PlayerContainer';
 import PlaylistContainer from './PlaylistContainer';
-import NewContainer from './NewContainer';
-import HomeContainer from './HomeContainer';
-import MentorPickContainer from './MentorPickContainer';
 import TabIcon from '../components/TabIcon';
 import ParallaxView from '../components/ParallaxView';
-import MainContainer from './MainContainer';
 import BugReportView from '../components/BugReportView';
 
 import { connect } from 'react-redux';
@@ -90,21 +89,21 @@ class App extends Component {
         <Scene key='login' title='Login' component={LoginContainer}/>
 
         <Scene key='main' component={MainContainer} hideNavBar initial={true}>
-          <Scene key='explore' tabs={true} tabBarStyle={{backgroundColor:'white'}} pressOpacity={0.9}>
-            <Scene key='home' icon={TabIcon} activeIcon='ios-home' inactiveIcon='ios-home-outline'>
+          <Scene key='explore' tabs={true} tabBarStyle={{backgroundColor:'black'}} pressOpacity={0.9}>
+            <Scene key='home' icon={TabIcon} activeIcon='home' inactiveIcon='home'>
               <Scene key='tab_home' component={HomeContainer} hideNavBar/>
             </Scene>
-            <Scene key='new_music' icon={TabIcon} activeIcon='ios-star' inactiveIcon='ios-star-outline'>
-              <Scene key='tab_new_music' component={NewContainer} hideNavBar/>
+            <Scene key='search' icon={TabIcon} activeIcon='magnifying-glass' inactiveIcon='magnifying-glass'>
+              <Scene key='tab_search' component={SearchContainer} hideNavBar/>
             </Scene>
-            <Scene key='popular_music' icon={TabIcon} activeIcon='ios-heart' inactiveIcon='ios-heart-outline' >
-              <Scene key='tab_popular_music' component={PopularContainer} hideNavBar/>
+            <Scene key='publish' icon={TabIcon} activeIcon='upload' inactiveIcon='upload' >
+              <Scene key='tab_publish' component={PublishContainer} hideNavBar/>
             </Scene>
-            <Scene key='recommended_music' icon={TabIcon} activeIcon='ios-checkmark-circle' inactiveIcon='ios-checkmark-circle-outline'>
-              <Scene key='tab_recommended_music' component={MentorPickContainer} hideNavBar/>
+            <Scene key='activity' icon={TabIcon} activeIcon='heart' inactiveIcon='heart'>
+              <Scene key='tab_activity' component={ActivityContainer} hideNavBar/>
             </Scene>
-            <Scene key='my_music' icon={TabIcon} activeIcon='ios-musical-notes' inactiveIcon='ios-musical-notes-outline'>
-              <Scene key='tab_my_music' component={ProfileContainer} hideNavBar/>
+            <Scene key='user' icon={TabIcon} activeIcon='torso' inactiveIcon='torso'>
+              <Scene key='tab_user' component={UserContainer} hideNavBar/>
             </Scene>
           </Scene>
         </Scene>
