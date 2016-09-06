@@ -3,12 +3,12 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import DummyView from '../components/DummyView';
+import ActivityView from '../components/ActivityView';
 
 class ActivityContainer extends Component {
   render() {
     return (
-      <DummyView text='ActivityContainer'/>
+      <ActivityView/>
     )
   }
 }
