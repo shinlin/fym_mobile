@@ -36,9 +36,9 @@ class HomeContainer extends Component {
         initialPage={0}
       >
         <DummyView tabLabel="For you" />
-        <NewTracks tabLabel="What's new!" items={newTracks} playlist={playlist} {...newActions}/>
-        <PopularTracks tabLabel="Popular" items={popularTracks} playlist={playlist} {...popularActions}/>
-        <MentorPick tabLabel="FYM's picks" items={mentorPick} playlist={playlist} {...mentorActions}/>
+        <NewTracks tabLabel="What's new!" items={newTracks.items} isFetching={newTracks.isFetching} playlist={playlist} {...newActions}/>
+        <PopularTracks tabLabel="Popular" items={popularTracks.items} isFetching={popularTracks.isFetching} playlist={playlist} {...popularActions}/>
+        <MentorPick tabLabel="FYM's picks" items={mentorPick.items} isFetching={mentorPick.isFetching} playlist={playlist} {...mentorActions}/>
         <DummyView tabLabel="Other's choices" />
       </ScrollableTabView>
     )
@@ -47,9 +47,9 @@ class HomeContainer extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    popularTracks: state.popularList.items,
-    newTracks: state.newList.items,
-    mentorPick: state.mentorPick.items,
+    newTracks: state.newList,
+    popularTracks: state.popularList,
+    mentorPick: state.mentorPick,
     playlist: state.playlist,
     player: state.player,
   }
