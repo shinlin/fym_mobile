@@ -8,17 +8,18 @@ import {
   AsyncStorage,
 } from 'react-native';
 import { color } from './config'
+import { Actions } from 'react-native-router-flux'
 
 export default class LoginView extends Component {
 
   static propTypes = {
     isLoggedIn: React.PropTypes.bool,
-    data: React.PropTypes.array,
+    data: React.PropTypes.object,
   }
 
   static defaultProps = {
     isLoggedIn: false,
-    data: [],
+    data: {},
   }
 
   constructor(props) {

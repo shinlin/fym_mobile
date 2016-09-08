@@ -2,7 +2,6 @@ import * as types from './actionTypes';
 import { facebookLogin, getFacebookInfo, facebookLogout } from '../utils/facebookAPI';
 
 const loggedIn = () => {
-  console.log("inside loggedIn")
   return {
     type: types.LOGGED_IN,
     isLoggedIn: true,
@@ -17,7 +16,7 @@ const loggedOut = () => {
 }
 
 const updateUser = (data) => {
-  console.log("updateUser --- " + data);
+  console.log("updateUser " + data.name)
   return {
     type: types.UPDATE_USER,
     isLoggedIn: true,
@@ -26,16 +25,15 @@ const updateUser = (data) => {
 }
 
 export function login() {
-  console.log("login()!!!");
   return (dispatch) => {
     facebookLogin()
     .then((facebookAuthResult) => {
-      console.log("inside facebookLogin().then 1 with token -- " + facebookAuthResult.accessToken)
+      // facebookAuthResult.accessToken contains accessToken
       dispatch(loggedIn());
       return getFacebookInfo(facebookAuthResult.accessToken);
     })
     .then((facebookProfile) => {
-      console.log("inside facebookLogin().then 2 " + facebookProfile)
+      console.log('facebookProfile --- ' + facebookProfile.name)
       dispatch(updateUser(facebookProfile));
     })
     .catch((error) => {

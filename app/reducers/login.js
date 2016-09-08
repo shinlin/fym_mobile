@@ -2,7 +2,7 @@ import * as types from '../actions/actionTypes';
 
 initialState = {
   isLoggedIn: false,
-  data: [],
+  data: {},
 }
 
 export default fetchLogin = (state = initialState, action) => {

@@ -7,17 +7,72 @@ const {
 } = FBSDK;
 import { Actions } from 'react-native-router-flux'
 
-export function getFacebookInfo() {
+export function facebookLogin() {
+  return new Promise((resolve, reject) => {
+    LoginManager.logInWithReadPermissions(['email', 'public_profile'])
+    .then((loginResult) => {
+      if (loginResult.isCancelled) {
+        console.log('Login cancelled');
+      } else {
+        console.log('Login success : ' + JSON.stringify(loginResult));
+        resolve(AccessToken.getCurrentAccessToken());
+      }
+    })
+    .catch((error) => {
+      reject(error);
+    })
+  })
+}
 
-  console.log('getFacebookInfo()')
+export function getFacebookInfo() {
   return new Promise((resolve, reject) => {
     const infoCallback = (error, profile) => {
       if (error) {
         reject (error);
       }
-      console.log("profile --- " + profile);
-      Actions.main();
-      resolve(profile);
+
+      const UPDATE_USER_API = "http://www.feedyourmusic.com/api/v1/update_user"
+      const TEST_API = "http://www.feedyourmusic.com/api/v1/test"
+      const provider = "facebook"
+
+      AccessToken.getCurrentAccessToken().then((accessToken) => {
+        var data = {
+          provider: provider,
+          accessToken: accessToken.accessToken,
+          uid: profile.id,
+          email: profile.email,
+          name: profile.name,
+          first_name: profile.first_name,
+          last_name: profile.last_name,
+          avatar_url: profile.picture.data.url,
+        }
+
+        fetch(UPDATE_USER_API, { method: "POST", body: JSON.stringify(data) })
+          .then((response) => {
+            response.json()
+            if (response.status === 200) {
+
+              Actions.main();
+              resolve(profile);
+
+              fetch(TEST_API, {
+                method: "GET", headers: {
+                  'Authorization': "Token token=" + accessToken.accessToken
+                }
+              })
+                .then((response) => {
+                  console.log("response from TEST_API")
+                  console.log(response)
+                })
+                .catch((error) => {
+                  console.warn(error)
+                })
+            }
+          })
+          .catch((error) => {
+            console.warn(error)
+          })
+      })
     }
 
     const infoRequest = new GraphRequest(
@@ -33,26 +88,6 @@ export function getFacebookInfo() {
     );
 
     new GraphRequestManager().addRequest(infoRequest).start();
-  })
-}
-
-export function facebookLogin() {
-  return new Promise((resolve, reject) => {
-    LoginManager.logInWithReadPermissions(['email', 'public_profile'])
-    .then((loginResult) => {
-      if (loginResult.isCancelled) {
-        console.log('Login cancelled');
-      } else {
-        console.log('Login success with permissions: ' + JSON.stringify(loginResult));
-        return AccessToken.getCurrentAccessToken();
-      }
-    })
-    .then((result) => {
-      resolve(result);
-    })
-    .catch((error) => {
-      reject(error);
-    })
   })
 }
 
