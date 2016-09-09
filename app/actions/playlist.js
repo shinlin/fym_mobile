@@ -3,25 +3,35 @@ import * as types from './actionTypes';
 
 export const loadPlaylist = () => {
   return (dispatch) => {
-    return AsyncStorage.getItem('PLAYLIST')
-            .then((jsonState) => JSON.parse(jsonState) || {})
-            .then(json => dispatch({
-              type: types.LOAD_PLAYLIST_FROM_DISK,
-              tracks: json.tracks || [],
-            }))
-            .catch(error => console.log(error));
+    AsyncStorage.getItem('PLAYLIST')
+      .then((jsonState) => JSON.parse(jsonState) || {})
+      .then(json => dispatch({
+        type: types.LOAD_PLAYLIST_FROM_DISK,
+        tracks: json.tracks || [],
+      }))
+      .catch(error => console.log(error));
+
+    AsyncStorage.getItem('CURRENT_INDEX')
+      .then((index) => {
+        console.log(index);
+        dispatch({
+          type: types.CHANGE_CURRENT_TRACK,
+          index: index ? parseInt(index) : -1,
+        })
+      })
+      .catch(error => console.log(error));
   }
 }
 
 const savePlaylist = (getState) => {
-  const { playlist } = getState();
+  const { playlist, player } = getState();
   const jsonState = JSON.stringify(playlist);
   AsyncStorage.setItem('PLAYLIST', jsonState, () => {
     // This is only for testing and should be removed later
     AsyncStorage.getItem('PLAYLIST', (err, result) => {
       //console.log(JSON.parse(result));
     })
-  })
+  });
 }
 
 export const clearTracks = () => {

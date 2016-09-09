@@ -24,6 +24,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import * as playlistActions from '../actions/playlist';
+import * as playerActions from '../actions/player';
 
 
 const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) => {
@@ -107,9 +108,9 @@ class App extends Component {
           </Scene>
         </Scene>
 
-        <Scene key='player' component={PlayerContainer} hideNavBar animation='fadeInScene'/>
+        <Scene key='player' component={PlayerContainer} hideNavBar direction='vertical'/>
         <Scene key='parallax' component={ParallaxView}/>
-        <Scene key='playlist' component={PlaylistContainer} direction='vertical'/>
+        <Scene key='playlist' component={PlaylistContainer} hideNavBar={false}/>
         <Scene key='bugreport' component={BugReportView} hideNavBar/>
       </Router>
     );
@@ -126,12 +127,13 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     playlist: state.playlist,
+    player: state.player,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(playlistActions, dispatch),
+    actions: bindActionCreators({...playlistActions, ...playerActions}, dispatch),
   }
 }
 

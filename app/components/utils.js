@@ -7,3 +7,14 @@ export const convertMsToTime = (duration) => {
 
   return minutes + ":" + seconds;
 }
+
+export const convertSecToTime = (duration) => {
+  let seconds = parseInt(duration%60)
+    , minutes = parseInt((duration/60)%60);
+
+  seconds = (seconds < 10) ? "0" + seconds : seconds;
+  mintues = (minutes < 10) ? "0" + minutes : minutes;
+
+  return minutes + ":" + seconds;
+  
+}
