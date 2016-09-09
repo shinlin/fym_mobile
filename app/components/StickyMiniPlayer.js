@@ -28,7 +28,7 @@ class StickyMiniPlayer extends Component {
     }
 
     this._onPlayerStateChanged = this._onPlayerStateChanged.bind(this);
-    this._onUpdatePosition = this._onUpdatePosition.bind(this);    
+    this._onUpdatePosition = this._onUpdatePosition.bind(this);
   }
 
   componentDidMount() {
@@ -94,13 +94,20 @@ class StickyMiniPlayer extends Component {
     if (player.status === PLAY_STATUS.PLAYING) {
       RCTPlayer.pause();
       actions.changePlayerStatus(PLAY_STATUS.PAUSED);
-    } else if (player.status === PLAY_STATUS.END) {
+    } else if (player.status === PLAY_STATUS.END || player.status === PLAY_STATUS.INIT) {
       RCTPlayer.prepare(trackInfo.stream_url, true);
       actions.changePlayerStatus(PLAY_STATUS.PLAYING);
     } else {
       RCTPlayer.resume();
       actions.changePlayerStatus(PLAY_STATUS.PLAYING);
-    }    
+    }
+  }
+
+  _onPlayer() {
+    Actions.player({
+      autoplay: false,
+      startPosition: this.state.currentTime,
+    });
   }
 
   render() {
@@ -110,7 +117,7 @@ class StickyMiniPlayer extends Component {
     return (
       <View style={[styles.container, style]}>
         <View style={styles.controls}>
-          <TouchableHighlight style={{flex:1}} onPress={() => Actions.player()} disabled={trackInfo === null ? true : false}>
+          <TouchableHighlight style={{flex:1}} onPress={() => this._onPlayer()} disabled={trackInfo === null ? true : false}>
             <View style={{flexDirection:'row', alignItems:'center'}}>
               { trackInfo ? 
                 <Image style={styles.thumbnail} source={{uri:trackInfo.artwork_url}} /> 

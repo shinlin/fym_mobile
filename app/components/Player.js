@@ -10,12 +10,12 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import RCTPlayer from 'react-native-player';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import ProgressBar from 'react-native-slider';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import { CHANGE_TYPES, PLAY_STATUS } from '../constants/SongConstants';
-import { convertMsToTime } from './utils';
+import { convertMsToTime, convertSecToTime } from './utils';
 import PlayerTabBar from './PlayerTabBar';
 import CoverView from '../components/CoverView';
 
@@ -35,6 +35,8 @@ class Player extends Component {
     currentTrackIndex: React.PropTypes.number,
     repeat: React.PropTypes.string,
     shuffle: React.PropTypes.string,
+    autoplay: React.PropTypes.bool,
+    startPosition: React.PropTypes.number,
   }
 
   static defaultProps = {
@@ -43,6 +45,8 @@ class Player extends Component {
     tracks: [],
     repeat: 'none',
     shuffle: 'none',
+    autoplay: true,
+    startPosition: 0,
   }
 
   constructor(props) {
@@ -51,10 +55,8 @@ class Player extends Component {
     this._isDragging = false;
 
     this.state = {
-      strCurrentTime: '00:00',
-      strDuration: '00:00',
-      currentTime: 0,
-      duration: 0,
+      strCurrentTime: convertSecToTime(props.startPosition),
+      currentTime: props.startPosition,
       showCover: true,
     }
 
@@ -63,14 +65,6 @@ class Player extends Component {
   }
 
   _onPlayerStateChanged(event) {
-    if(event.playbackState === 4) { // READY
-      RCTPlayer.getDuration(duration => {
-        this.setState({
-        strDuration: convertMsToTime(duration),
-        duration: parseInt(duration/60),
-        })
-      });
-    }
   }
 
   _onUpdatePosition(event) {
@@ -78,7 +72,7 @@ class Player extends Component {
 
     this.setState({
       strCurrentTime: convertMsToTime(event.currentPosition),
-      currentTime: parseInt(event.currentPosition/60),
+      currentTime: parseInt(event.currentPosition/60),      
     });
   }
 
@@ -86,13 +80,15 @@ class Player extends Component {
     DeviceEventEmitter.addListener('onPlayerStateChanged', this._onPlayerStateChanged);
     DeviceEventEmitter.addListener('onUpdatePosition', this._onUpdatePosition);
 
-    if (this.props.player.status === PLAY_STATUS.PLAYING) {
-      RCTPlayer.stop();
-      this.props.actions.changePlayerStatus(PLAY_STATUS.END);
-    }
+    if (this.props.autoplay) {
+      if (this.props.player.status === PLAY_STATUS.PLAYING) {
+        RCTPlayer.stop();
+        this.props.actions.changePlayerStatus(PLAY_STATUS.END);
+      }
 
-    RCTPlayer.prepare(this.props.trackInfo.stream_url, true);
-    this.props.actions.changePlayerStatus(PLAY_STATUS.PLAYING);
+      RCTPlayer.prepare(this.props.trackInfo.stream_url, true);
+      this.props.actions.changePlayerStatus(PLAY_STATUS.PLAYING);
+    }
   }
 
   componentWillUnmount() {
@@ -172,7 +168,7 @@ class Player extends Component {
               value={this.state.currentTime}
               onValueChange={(value) => {this.setState({time:value})}}
               minimumValue={0}
-              maximumValue={this.state.duration}
+              maximumValue={parseInt(trackInfo.duration/60)}
               trackStyle={styles.trackStyle}
               thumbStyle={styles.thumbStyle}
               onSlidingStart={() => this._isDragging = true}
@@ -183,7 +179,7 @@ class Player extends Component {
             />
             <View style={{flexDirection:'row', justifyContent:'space-between', top: -10}}>
               <Text style={{fontSize:10, marginLeft:10}}>{this.state.strCurrentTime}</Text>
-              <Text style={{fontSize:10, marginRight:10}}>{this.state.strDuration}</Text>
+              <Text style={{fontSize:10, marginRight:10}}>{convertMsToTime(trackInfo.duration)}</Text>
             </View>
           </View>
           <View style={{flex:1, justifyContent:'space-between', margin:10, marginTop:0}}>

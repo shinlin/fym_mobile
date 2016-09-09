@@ -9,11 +9,13 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
+import RCTPlayer from 'react-native-player';
 
 export default class Playlist extends Component{
 
   static propTypes = {
     tracks: React.PropTypes.array,
+    player: React.PropTypes.object,
   }
 
   static defaultProps = {
@@ -40,7 +42,6 @@ export default class Playlist extends Component{
 
   _play(rowID) {
     this.props.changeCurrentTrack(parseInt(rowID), true);
-    Actions.player();
   }
 
   _renderSeparator(sectionID, rowID) {
@@ -71,8 +72,19 @@ export default class Playlist extends Component{
   }
 
   render() {
+    const { player, tracks } = this.props;
+    let trackInfo = tracks[player.currentTrackIndex];
+
     return(
       <View style={styles.container}>
+        <View style={[styles.rowSubContainer, {backgroundColor:'lightgray', paddingVertical: 5,}]}>
+          <Image style={styles.thumbnail} source={{uri:trackInfo.artwork_url}}/>
+          <View style={styles.textContainer}>
+            <Text numberOfLines ={1} style={styles.title}>{trackInfo.title}</Text>
+            <Text style={styles.subtitle}>{trackInfo.rap_name}</Text>
+          </View>
+        </View>        
+      
         <ListView
           style={styles.list}
           contentContainerStyle={styles.contentContainer}

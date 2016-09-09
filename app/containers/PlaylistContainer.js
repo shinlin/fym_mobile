@@ -16,16 +16,17 @@ class PlaylistContainer extends Component {
   }
 
   render() {
-    const { trackInfo, tracks, actions } = this.props;
+    const { trackInfo, tracks, actions, player } = this.props;
 
     return (
-      <Playlist trackInfo={trackInfo} tracks={tracks} {...actions}/>
+      <Playlist trackInfo={trackInfo} tracks={tracks} player={player} {...actions}/>
     )
   }
 }
 
 const mapStateToProps = (state) => {
   return {
+    player: state.player,
     tracks: state.playlist.tracks,
   }
 }
