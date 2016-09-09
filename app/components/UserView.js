@@ -10,7 +10,7 @@ import {
 import { color } from './config'
 import { Actions } from 'react-native-router-flux'
 
-export default class LoginView extends Component {
+export default class UserView extends Component {
 
   static propTypes = {
     isLoggedIn: React.PropTypes.bool,
@@ -25,24 +25,14 @@ export default class LoginView extends Component {
   constructor(props) {
     super(props);
   }
-
-  componentDidMount() {
-    // Get accessToken from local storage
-    AsyncStorage.getItem("accessToken").then((value) => {
-      this.setState({ "accessToken": value });
-    }).done();
-  }
   
   render() {
+
     return (
       <View style={styles.container}>
-        <TouchableHighlight onPress={() => this.props.login() }>
-          <View style={[styles.fbButton, { backgroundColor: color.blue }]}>
-            <Image source={require('../../assets/images/fb_icon.jpg') } style={styles.fbImage} />
-            <Text style={styles.fbButtonText}>페이스북으로 로그인 하기</Text>
-          </View>
-        </TouchableHighlight>
-        <Text onPress={() => Actions.main()}>Skip</Text>
+        <Text>Welcome~~~!!!</Text>
+        <Text>{this.props.data.name}</Text>
+        <Text>testing!!</Text>
       </View>
     )
   }

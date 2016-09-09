@@ -3,14 +3,33 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import DummyView from '../components/DummyView';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import UserView from '../components/UserView';
+import * as loginActions from '../actions/login';
 
 class UserContainer extends Component {
   render() {
+
+    const { isLoggedIn, data } = this.props;
     return (
-      <DummyView text='UserContainer'/>
+      <UserView isLoggedIn={isLoggedIn} data={data} />
     )
   }
 }
 
-export default UserContainer;
+const mapStateToProps = (state) => {
+  return {
+    isLoggedIn: state.login.isLoggedIn,
+    data: state.login.data,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    actions: bindActionCreators(loginActions, dispatch),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserContainer);

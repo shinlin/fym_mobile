@@ -86,9 +86,8 @@ class App extends Component {
         key='root'
         getSceneStyle={getSceneStyle}
       >
-        <Scene key='login' title='Login' component={LoginContainer}/>
-
-        <Scene key='main' component={MainContainer} hideNavBar initial={true}>
+        <Scene key='login' title='Login' component={LoginContainer} initial={true}/>
+        <Scene key='main' component={MainContainer} hideNavBar >
           <Scene key='explore' tabs={true} tabBarStyle={{backgroundColor:'black'}} pressOpacity={0.9}>
             <Scene key='home' icon={TabIcon} activeIcon='home' inactiveIcon='home'>
               <Scene key='tab_home' component={HomeContainer} hideNavBar/>
