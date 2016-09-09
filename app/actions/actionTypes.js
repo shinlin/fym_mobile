@@ -22,4 +22,6 @@ export const FETCH_MENTOR_PICK_FAILURE = 'FETCH_MENTOR_PICK_FAILURE';
 
 export const LOGGED_IN = 'LOGGED_IN';
 export const LOGGED_OUT = 'LOGGED_OUT';
+export const LOGIN_FAILED = 'LOGIN_FAILED';
+export const LOGIN_CANCELLED = 'LOGIN_CANCELLED';
 export const UPDATE_USER = 'UPDATE_USER';

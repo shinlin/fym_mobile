@@ -15,6 +15,20 @@ const loggedOut = () => {
   }
 }
 
+const loginCancelled = () => {
+  return {
+    type: types.LOGIN_CANCELLED,
+    isLoggedIn: false,
+  }
+}
+
+const loginFailed = () => {
+  return {
+    type: types.LOGIN_FAILED,
+    isLoggedIn: false,
+  }
+}
+
 const updateUser = (data) => {
   console.log("updateUser " + data.name)
   return {
@@ -24,20 +38,26 @@ const updateUser = (data) => {
   }
 }
 
+
+
 export function login() {
   return (dispatch) => {
     facebookLogin()
     .then((facebookAuthResult) => {
-      // facebookAuthResult.accessToken contains accessToken
-      dispatch(loggedIn());
-      return getFacebookInfo(facebookAuthResult.accessToken);
+      if (facebookAuthResult === 'SUCCESS') {
+        dispatch(loggedIn());
+        return getFacebookInfo(facebookAuthResult);
+      } else {
+        console.log("login cancelled!")
+        dispatch(loginCancelled());
+      }
     })
     .then((facebookProfile) => {
-      console.log('facebookProfile --- ' + facebookProfile.name)
       dispatch(updateUser(facebookProfile));
     })
     .catch((error) => {
-      
+      console.log("login failed!!")
+      dispatch(loginFailed());
     })
   }
 }

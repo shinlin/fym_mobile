@@ -12,10 +12,11 @@ export function facebookLogin() {
     LoginManager.logInWithReadPermissions(['email', 'public_profile'])
     .then((loginResult) => {
       if (loginResult.isCancelled) {
-        console.log('Login cancelled');
+        console.log('Login cancelled -- ');
+        resolve('CANCELLED');
       } else {
         console.log('Login success : ' + JSON.stringify(loginResult));
-        resolve(AccessToken.getCurrentAccessToken());
+        resolve('SUCCESS');
       }
     })
     .catch((error) => {
@@ -51,9 +52,8 @@ export function getFacebookInfo() {
           .then((response) => {
             response.json()
             if (response.status === 200) {
-
               Actions.main();
-              resolve(profile);
+              resolve(data);
 
               fetch(TEST_API, {
                 method: "GET", headers: {

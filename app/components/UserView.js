@@ -22,19 +22,8 @@ export default class UserView extends Component {
     data: {},
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      name: nextProps.data.name,
-    });
-  }
-
   constructor(props) {
     super(props);
-
-    this.state = {
-      name: '',
-    }
-
   }
   
   render() {
@@ -42,19 +31,10 @@ export default class UserView extends Component {
     return (
       <View style={styles.container}>
         <Text>Welcome~~~!!!</Text>
-        <Text>{this.state.name}</Text>
+        <Text>{this.props.data.name}</Text>
         <Text>testing!!</Text>
       </View>
     )
-  }
-
-  loginButton() {
-    return this.login();
-    // if (this.state.accessToken) {
-    //   return this.login();
-    // } else {
-    //   return this.logout();
-    // }
   }
 }
 

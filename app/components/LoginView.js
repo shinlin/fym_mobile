@@ -26,7 +26,7 @@ export default class LoginView extends Component {
     super(props);
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     // Get accessToken from local storage
     AsyncStorage.getItem("accessToken").then((value) => {
       this.setState({ "accessToken": value });
@@ -34,54 +34,18 @@ export default class LoginView extends Component {
   }
   
   render() {
-
     return (
       <View style={styles.container}>
-        { this.loginButton() }
+        <TouchableHighlight onPress={() => this.props.login() }>
+          <View style={[styles.fbButton, { backgroundColor: color.blue }]}>
+            <Image source={require('../../assets/images/fb_icon.jpg') } style={styles.fbImage} />
+            <Text style={styles.fbButtonText}>페이스북으로 로그인 하기</Text>
+          </View>
+        </TouchableHighlight>
         <Text onPress={() => Actions.main()}>Skip</Text>
       </View>
     )
   }
-
-  loginButton() {
-    return this.login();
-    // if (this.state.accessToken) {
-    //   return this.login();
-    // } else {
-    //   return this.logout();
-    // }
-  }
-
-  login() {
-    return (
-      <TouchableHighlight onPress={() => this._onLogin() }>
-        <View style={[styles.fbButton, { backgroundColor: color.blue }]}>
-          <Image source={require('../../assets/images/fb_icon.jpg') } style={styles.fbImage} />
-          <Text style={styles.fbButtonText}>페이스북으로 로그인 하기</Text>
-        </View>
-      </TouchableHighlight>
-    );
-  }
-
-  logout() {
-    return (
-      <TouchableHighlight onPress={() => this._onLogout() }>
-        <View style={[styles.fbButton, { backgroundColor: color.blue }]}>
-          <Image source={require('../../assets/images/fb_icon.jpg') } style={styles.fbImage} />
-          <Text style={styles.fbButtonText}>로그아웃</Text>
-        </View>
-      </TouchableHighlight>
-    );
-  }
-
-  _onLogin() {
-    this.props.login();
-  }
-
-  _onLogout() {
-    this.props.logout();
-  }
-
 }
 
   

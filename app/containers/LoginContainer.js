@@ -21,8 +21,8 @@ class LoginContainer extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isLoggedIn: state.isLoggedIn,
-    data: state.data,
+    isLoggedIn: state.login.isLoggedIn,
+    data: state.login.data,
   }
 }
 
