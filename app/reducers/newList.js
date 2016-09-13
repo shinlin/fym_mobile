@@ -1,6 +1,6 @@
 import * as types from '../actions/actionTypes';
 
-initialState = {
+var initialState = {
   isFetching: false,
   error: '',
   items: [],

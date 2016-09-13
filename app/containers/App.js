@@ -5,7 +5,12 @@ import {
   Text,
   Image,
 } from 'react-native';
-import { Scene, Router, TabBar, DefaultRenderer } from 'react-native-router-flux'
+import { Scene, Router, TabBar, Actions } from 'react-native-router-flux'
+
+import FBSDK from 'react-native-fbsdk';
+const { 
+  AccessToken,
+} = FBSDK;
 
 import MainContainer from './MainContainer';
 import LoginContainer from './LoginContainer';
@@ -25,7 +30,9 @@ import { bindActionCreators } from 'redux';
 
 import * as playlistActions from '../actions/playlist';
 import * as playerActions from '../actions/player';
+import * as userActions from '../actions/userInfo';
 
+import { checkTokenValidity } from '../utils/facebookAPI'
 
 const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) => {
   const style = {
@@ -43,42 +50,11 @@ const getSceneStyle = (/* NavigationSceneRendererProps */ props, computedProps) 
   return style;
 };
 
-function fadeInScene(/* NavigationSceneRendererProps */ props) {
-  const {
-    position,
-    scene,
-  } = props;
-
-  const index = scene.index;
-  const inputRange = [index - 1, index, index + 1];
-
-  const opacity = position.interpolate({
-    inputRange,
-    outputRange: [0, 1, 0.3],
-  });
-
-  const scale = position.interpolate({
-    inputRange,
-    outputRange: [1, 1, 0.95],
-  });
-
-  const translateY = 0;
-  const translateX = 0;
-
-  return {
-    opacity,
-    transform: [
-      { scale },
-      { translateX },
-      { translateY },
-    ],
-  };
-}
-
 class App extends Component {
 
   componentWillMount() {
     this.props.actions.loadPlaylist();
+    this.props.actions.getUserInfo();
   }
 
   render() {
@@ -87,8 +63,8 @@ class App extends Component {
         key='root'
         getSceneStyle={getSceneStyle}
       >
-        <Scene key='login' title='Login' component={LoginContainer} initial={true}/>
-        <Scene key='main' component={MainContainer} hideNavBar >
+        <Scene key='login' title='Login' component={LoginContainer} hideNavBar direction='vertical'/>
+        <Scene key='main' component={MainContainer} hideNavBar initial={true}>
           <Scene key='explore' tabs={true} tabBarStyle={{backgroundColor:'black'}} pressOpacity={0.9}>
             <Scene key='home' icon={TabIcon} activeIcon='home' inactiveIcon='home'>
               <Scene key='tab_home' component={HomeContainer} hideNavBar/>
@@ -128,12 +104,13 @@ const mapStateToProps = (state) => {
   return {
     playlist: state.playlist,
     player: state.player,
+    userInfo: state.userInfo,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators({...playlistActions, ...playerActions}, dispatch),
+    actions: bindActionCreators({...playlistActions, ...playerActions, ...userActions}, dispatch),
   }
 }
 

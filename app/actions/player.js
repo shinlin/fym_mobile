@@ -64,8 +64,6 @@ export const changeTrack = (changeType) => {
     }
 
     // Save current track index to local storage
-    console.log(typeof newIndex);
-    console.log(newIndex.toString());
     AsyncStorage.setItem('CURRENT_INDEX', newIndex.toString());    
 
     return dispatch({

@@ -9,36 +9,48 @@ import {
 } from 'react-native';
 import { color } from './config'
 import { Actions } from 'react-native-router-flux'
+import FBSDK from 'react-native-fbsdk';
+
+const { LoginButton } = FBSDK
 
 export default class UserView extends Component {
 
   static propTypes = {
-    isLoggedIn: React.PropTypes.bool,
-    data: React.PropTypes.object,
+    userInfo: React.PropTypes.object,
   }
 
   static defaultProps = {
-    isLoggedIn: false,
-    data: {},
   }
 
   constructor(props) {
     super(props);
   }
+
+  _testFunction() {
+    console.log("hhahhhhhh");
+    if(!this.props.userInfo.isLoggedIn) {
+      Actions.login();
+    }
+  }
+
+  _logout() {
+    console.log(this.props);
+    this.props.logoutRequest();
+  }
   
   render() {
+    const { userInfo } = this.props;
 
     return (
       <View style={styles.container}>
         <Text>Welcome~~~!!!</Text>
-        <Text>{this.props.data.name}</Text>
+        <Text onPress={() => this._testFunction()}>{userInfo.isLoggedIn ? userInfo.info.name : '로그인이 필요합니다'}</Text>
         <Text>testing!!</Text>
+        <Text onPress={() => this._logout()}>로그 아웃</Text>
       </View>
     )
   }
 }
-
-  
 
 const styles = StyleSheet.create({
   container: {

@@ -8,47 +8,36 @@ import {
   AsyncStorage,
 } from 'react-native';
 import { color } from './config'
-import { Actions } from 'react-native-router-flux'
+import { Actions, ActionConst } from 'react-native-router-flux'
+import FBSDK from 'react-native-fbsdk';
+
+const { LoginButton } = FBSDK
 
 export default class LoginView extends Component {
 
   static propTypes = {
-    isLoggedIn: React.PropTypes.bool,
-    data: React.PropTypes.object,
   }
 
   static defaultProps = {
-    isLoggedIn: false,
-    data: {},
   }
 
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-    // Get accessToken from local storage
-    AsyncStorage.getItem("accessToken").then((value) => {
-      this.setState({ "accessToken": value });
-    }).done();
-  }
-  
   render() {
+    const { userInfo, loginRequest } = this.props;
+
     return (
       <View style={styles.container}>
-        <TouchableHighlight onPress={() => this.props.login() }>
+        <TouchableHighlight onPress={() => loginRequest() }>
           <View style={[styles.fbButton, { backgroundColor: color.blue }]}>
             <Image source={require('../../assets/images/fb_icon.jpg') } style={styles.fbImage} />
             <Text style={styles.fbButtonText}>페이스북으로 로그인 하기</Text>
           </View>
         </TouchableHighlight>
-        <Text onPress={() => Actions.main()}>Skip</Text>
+
+        <Text onPress={() => Actions.main({type:ActionConst.REPLACE})}>Continue without signing in</Text>
       </View>
     )
   }
-}
-
-  
+}  
 
 const styles = StyleSheet.create({
   container: {
