@@ -12,7 +12,7 @@ import RCTPlayer from 'react-native-player';
 import { Actions } from 'react-native-router-flux';
 import ProgressBar from 'react-native-slider';
 
-import { PLAY_STATUS, CHANGE_TYPES } from '../constants/SongConstants';
+import { PLAY_STATUS, CHANGE_TYPES } from '../constants/constants';
 
 class StickyMiniPlayer extends Component {
   static propTypes = {

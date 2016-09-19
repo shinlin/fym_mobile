@@ -1,7 +1,7 @@
 import { AsyncStorage } from 'react-native';
 
 import * as types from './actionTypes';
-import { CHANGE_TYPES } from '../constants/SongConstants'
+import { CHANGE_TYPES } from '../constants/constants'
 
 export const changePlayerStatus = (status) => {
   return {
@@ -64,8 +64,6 @@ export const changeTrack = (changeType) => {
     }
 
     // Save current track index to local storage
-    console.log(typeof newIndex);
-    console.log(newIndex.toString());
     AsyncStorage.setItem('CURRENT_INDEX', newIndex.toString());    
 
     return dispatch({

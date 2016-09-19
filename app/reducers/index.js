@@ -5,7 +5,7 @@ import playlist from './playlist';
 import newList from './newList';
 import popularList from './popularList';
 import mentorPick from './mentorPick';
-import login from './login';
+import userInfo from './userInfo';
 
 export default combineReducers({
   mentorPick,
@@ -13,5 +13,5 @@ export default combineReducers({
   popularList,
   player,
   playlist,
-  login,
+  userInfo,
 });

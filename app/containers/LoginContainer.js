@@ -7,28 +7,27 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Login from '../components/LoginView';
-import * as loginActions from '../actions/login';
+import * as userActions from '../actions/userInfo';
 
 class LoginContainer extends Component {
   render() {
-    const { isLoggedIn, data, actions } = this.props;
+    const { userInfo, actions } = this.props;
 
     return (
-      <Login isLoggedIn={isLoggedIn} data={data} {...actions} />
+      <Login userInfo {...actions} />
     )
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    isLoggedIn: state.login.isLoggedIn,
-    data: state.login.data,
+    userInfo: state.userInfo,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(loginActions, dispatch),
+    actions: bindActionCreators(userActions, dispatch),
   }
 }
 
