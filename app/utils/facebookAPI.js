@@ -45,7 +45,7 @@ export function getFacebookInfo() {
         })
         .then((response) => {
           if (response.status === 200) {
-            Actions.pop();
+            Actions.main();
             resolve(data);
           }
         })

@@ -1,7 +1,7 @@
 import { AsyncStorage } from 'react-native';
 
 import * as types from './actionTypes';
-import { CHANGE_TYPES } from '../constants/SongConstants'
+import { CHANGE_TYPES } from '../constants/constants'
 
 export const changePlayerStatus = (status) => {
   return {

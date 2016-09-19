@@ -27,13 +27,6 @@ export default class UserView extends Component {
     super(props);
   }
 
-  _testFunction() {
-    console.log("hhahhhhhh");
-    if(!this.props.userInfo.isLoggedIn) {
-      Actions.login();
-    }
-  }
-
   _logout() {
     console.log(this.props);
     this.props.logoutRequest();
@@ -41,14 +34,14 @@ export default class UserView extends Component {
   
   render() {
     const { userInfo } = this.props;
-    const { isLoggedIn, info } = userInfo; 
+    const { info } = userInfo; 
 
     return (
       <ScrollView 
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
-        <TouchableHighlight>
+        <TouchableHighlight onPress={() => Actions.artist()}>
           <View style={{flexDirection:'row', alignItems:'center', backgroundColor:'white'}}>
             <Image
               style={{width:64, height:64, margin:10}}
@@ -64,13 +57,7 @@ export default class UserView extends Component {
         <View style={{marginVertical:15}}>
           <TouchableHighlight onPress={() => console.log("Show following....")}>
             <View style={{flexDirection:'row', backgroundColor:'white', height:50, alignItems:'center', justifyContent: 'space-between', paddingHorizontal:10, borderTopWidth:0.5, borderColor:'gray'}}>
-              <Text style={styles.itemText}>Following</Text>
-              <Icon name='ios-arrow-forward' size={25}/>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={() => console.log("Show following....")}>
-            <View style={{flexDirection:'row', backgroundColor:'white', height:50, alignItems:'center', justifyContent: 'space-between', paddingHorizontal:10, borderTopWidth:0.5, borderColor:'gray'}}>
-              <Text style={styles.itemText}>Follower</Text>
+              <Text style={styles.itemText}>Listening history</Text>
               <Icon name='ios-arrow-forward' size={25}/>
             </View>
           </TouchableHighlight>  
@@ -88,12 +75,13 @@ export default class UserView extends Component {
           </TouchableHighlight>  
         </View>
 
-        <TouchableHighlight onPress={() => console.log("Show following....")}>
+        <TouchableHighlight onPress={() => Actions.settings()}>
           <View style={{flexDirection:'row', backgroundColor:'white', height:50, alignItems:'center', justifyContent: 'space-between', paddingHorizontal:10, borderTopWidth:0.5, borderColor:'gray'}}>
             <Text style={styles.itemText}>Settings</Text>
+            <Icon name='ios-arrow-forward' size={25}/>
           </View>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={() => console.log("Show following....")}>
+        </TouchableHighlight>  
+        <TouchableHighlight onPress={() => console.log("Go to help page...")}>
           <View style={{flexDirection:'row', backgroundColor:'white', height:50, alignItems:'center', justifyContent: 'space-between', paddingHorizontal:10, borderTopWidth:0.5, borderBottomWidth:0.5, borderColor:'gray'}}>
             <Text style={styles.itemText}>Help</Text>
           </View>

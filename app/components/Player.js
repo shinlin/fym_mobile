@@ -14,7 +14,7 @@ import { Actions, ActionConst } from 'react-native-router-flux';
 import ProgressBar from 'react-native-slider';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
-import { CHANGE_TYPES, PLAY_STATUS } from '../constants/SongConstants';
+import { CHANGE_TYPES, PLAY_STATUS } from '../constants/constants';
 import { convertMsToTime, convertSecToTime } from './utils';
 import PlayerTabBar from './PlayerTabBar';
 import CoverView from '../components/CoverView';

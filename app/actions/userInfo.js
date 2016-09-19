@@ -5,33 +5,13 @@ const { AccessToken } = FBSDK;
 import * as types from './actionTypes';
 import { facebookLogin, getFacebookInfo, facebookLogout } from '../utils/facebookAPI';
 
-import { Actions, ActionConst } from 'react-native-router-flux'
+import { Actions, ActionConst } from 'react-native-router-flux';
+import { LOGIN_STATUS } from '../constants/constants';
 
-const loginSuccess = () => {
+const changeLoginStatus = (status) => {
   return {
-    type: types.USER_LOGIN_SUCCESS,
-    isLoggedIn: true,
-  }
-}
-
-const logoutSuccess = () => {
-  return {
-    type: types.USER_LOGOUT_SUCCESS,
-    isLoggedIn: false,
-  }
-}
-
-const loginCancel = () => {
-  return {
-    type: types.USER_LOGIN_CANCEL,
-    isLoggedIn: false,
-  }
-}
-
-const loginFailure = () => {
-  return {
-    type: types.USER_LOGIN_FAILURE,
-    isLoggedIn: false,
+    type: types.USER_CHANGE_LOGIN_STATUS,
+    loginStatus: status,
   }
 }
 
@@ -46,21 +26,29 @@ export const getUserInfo = () => {
   return (dispatch) => {
     AccessToken.getCurrentAccessToken()
     .then((accessToken) => {
-      // Retreive user information using current user access token
-      fetch("http://www.feedyourmusic.com/api/v1/my_info", {
-        method: "GET", 
-        headers: {
-          'Authorization': "Token token=" + accessToken.accessToken
-        }
-      })
-      .then((response) => JSON.parse(response._bodyText))
-      .then(json => {
-        dispatch(loginSuccess());
-        dispatch(updateUserInfo(json));
-      })
-      .catch((error) => {
-        console.warn(error)
-      })
+      if(!accessToken) {
+        // If accessToken is null, we assume that current login status is LOGOUT
+        dispatch(changeLoginStatus(LOGIN_STATUS.LOGOUT));
+      } else {
+        // Check if the given accessToken is valid or not
+        // TODO : here...
+
+        // Retreive user information using current user access token
+        fetch("http://www.feedyourmusic.com/api/v1/my_info", {
+          method: "GET", 
+          headers: {
+            'Authorization': "Token token=" + accessToken.accessToken
+          }
+        })
+        .then((response) => JSON.parse(response._bodyText))
+        .then(json => {
+          dispatch(changeLoginStatus(LOGIN_STATUS.LOGIN));
+          dispatch(updateUserInfo(json));
+        })
+        .catch((error) => {
+          console.warn(error)
+        })
+      }
     })
     .catch(error => {
       console.log(error);
@@ -73,17 +61,17 @@ export const loginRequest = () => {
     facebookLogin()
     .then((facebookAuthResult) => {
       if (facebookAuthResult === 'SUCCESS') {
-        dispatch(loginSuccess());
+        dispatch(changeLoginStatus(LOGIN_STATUS.LOGIN));
         return getFacebookInfo(facebookAuthResult);
       } else {
-        dispatch(loginCancel());
+        dispatch(changeLoginStatus(LOGIN_STATUS.LOGOUT));
       }
     })
     .then((facebookProfile) => {
       dispatch(updateUserInfo(facebookProfile));
     })
     .catch((error) => {
-      dispatch(loginFailure());
+      dispatch(changeLoginStatus(LOGIN_STATUS.LOGOUT));
     })
   }
 }
@@ -91,7 +79,7 @@ export const loginRequest = () => {
 export const logoutRequest = () => {
   return (dispatch) => {
     facebookLogout()
-    dispatch(logoutSuccess());
+    dispatch(changeLoginStatus(LOGIN_STATUS.LOGOUT));
     dispatch(updateUserInfo([]));
   }
 }
