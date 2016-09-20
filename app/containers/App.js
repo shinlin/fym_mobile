@@ -97,7 +97,7 @@ class App extends Component {
               </Scene>
             </Scene>
 
-            <Scene key='player' component={PlayerContainer} hideNavBar direction='vertical'/>
+            <Scene key='player' component={PlayerContainer} hideNavBar direction='vertical' panHandlers={null}/>
             <Scene key='parallax' component={ParallaxView}/>
             <Scene key='playlist' component={PlaylistContainer} hideNavBar={false}/>
             <Scene key='bugreport' component={BugReportView} hideNavBar/>
