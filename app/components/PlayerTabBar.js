@@ -62,7 +62,6 @@ export default class PlayerTabBar extends Component {
           contentContainerStyle={styles.tabs}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-
         >
           {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
         </ScrollView>
@@ -79,7 +78,7 @@ const styles = StyleSheet.create({
     marginHorizontal:1,
   },
   tabs: {
-    margin: 8,
+    padding: 8,
     flexDirection: 'row',
     justifyContent: 'center',
   },

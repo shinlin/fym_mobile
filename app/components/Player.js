@@ -3,12 +3,8 @@ import {
   StyleSheet,
   View,
   Text,
-  TouchableOpacity,
   TouchableHighlight,
   DeviceEventEmitter,
-  TouchableWithoutFeedback,
-  Dimensions,
-  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import RCTPlayer from 'react-native-player';
@@ -18,20 +14,8 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import { CHANGE_TYPES, PLAY_STATUS } from '../constants/constants';
 import { convertMsToTime, convertSecToTime } from './utils';
-import PlayerTabBar from './PlayerTabBar';
 import CoverView from '../components/CoverView';
 import BottomSheet from '../components/BottomSheet';
-
-const playIcon = (<Icon name="ios-play" size={50} />);
-const pauseIcon = (<Icon name="ios-pause" size={50} />);
-const nextIcon = (<Icon name="ios-fastforward" size={30} />);
-const prevIcon = (<Icon name="ios-rewind" size={30} />);
-const like = (<Icon name="ios-heart-outline" size={20} />);
-const share = (<Icon name="ios-share-outline" size={20} />);
-const more = (<Icon name="ios-more" size={20} />);
-const playlist = (<Icon name="ios-list" size={20} />);
-
-const screen = Dimensions.get('window');
 
 class Player extends Component {
   static propTypes = {
@@ -50,18 +34,17 @@ class Player extends Component {
     startPosition: 0,
   }
 
+  state = {
+    strCurrentTime: convertSecToTime(this.props.startPosition),
+    currentTime: this.props.startPosition,
+    showCover: true,
+    showModal: false,
+  }
+
   constructor(props) {
     super(props);
 
     this._isDragging = false;
-
-    this.state = {
-      strCurrentTime: convertSecToTime(props.startPosition),
-      currentTime: props.startPosition,
-      showCover: true,
-      showModal: false,
-    }
-
     this._onUpdatePosition = this._onUpdatePosition.bind(this);
   }
 
@@ -106,6 +89,9 @@ class Player extends Component {
       actions.changePlayerStatus(PLAY_STATUS.PAUSED);
     } else if (player.status === PLAY_STATUS.END) {
       RCTPlayer.prepare(trackInfo.stream_url, true);
+      actions.changePlayerStatus(PLAY_STATUS.PLAYING);
+    } else if (player.status === PLAY_STATUS.END || player.status === PLAY_STATUS.INIT) {
+      RCTPlayer.prepare(this.props.trackInfo.stream_url, true);
       actions.changePlayerStatus(PLAY_STATUS.PLAYING);
     } else {
       RCTPlayer.resume();
@@ -156,11 +142,13 @@ class Player extends Component {
           visible={false}
           onRequestClose={() => console.log("hahaha")}
         >
+          <BottomSheet.Item onPress={() => console.log("Track Info pressed...")} text='Track Info' iconName='ios-musical-notes-outline'/>
+          <BottomSheet.Item onPress={() => console.log("Artist Info pressed...")} text='Artist Info' iconName='md-person'/>
           <BottomSheet.Item onPress={() => console.log("Like pressed...")} text='Like' iconName='ios-heart'/>
           <BottomSheet.Item onPress={() => console.log("Share pressed...")} text='Share' iconName='ios-share-outline'/>
         </BottomSheet>
 
-        <View style={{flex:2, alignSelf:'stretch', alignItems:'center', justifyContent:'center', backgroundColor:'white'}}>
+        <View style={styles.trackInfo}>
           <CoverView 
             showCover={this.state.showCover} 
             trackInfo={trackInfo}
@@ -195,45 +183,69 @@ class Player extends Component {
               <Text style={{fontSize:14, color:'orangered'}}>{trackInfo.rap_name}</Text>
             </View>
             <View style={{flexDirection:'row', justifyContent: 'space-between', alignItems: 'center'}}>
-              <TouchableOpacity onPress={() => console.log("toggle like")}>
-                {like}
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this._playPrev.bind(this)}>
-                {prevIcon}
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this._playAndPause.bind(this)}>
-                {player.status === PLAY_STATUS.PLAYING ? pauseIcon : playIcon}
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this._playNext.bind(this)}>
-                {nextIcon}
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => Actions.playlist()}>
-                {playlist}
-              </TouchableOpacity>
+              <Icon.Button
+                name='ios-more'
+                size={20}
+                color='black'
+                backgroundColor='transparent'
+                iconStyle={{marginRight:0}}
+                style={{marginHorizontal:5, padding:0}}
+                onPress={() => this.refs.bottomsheet.open()}
+              />
+              <Icon.Button
+                name="ios-rewind"
+                size={30}
+                color='black'
+                backgroundColor='transparent'
+                iconStyle={{marginRight:0}}
+                style={{marginHorizontal:5, padding:0}}
+                onPress={this._playPrev.bind(this)}
+              />
+              <Icon.Button
+                name={player.status === PLAY_STATUS.PLAYING ? 'ios-pause' : 'ios-play'}
+                size={50}
+                color='black'
+                backgroundColor='transparent'
+                iconStyle={{marginRight:0}}
+                style={{marginHorizontal:5, padding:0}}
+                onPress={this._playAndPause.bind(this)}
+              />
+              <Icon.Button
+                name="ios-fastforward"
+                size={30}
+                color='black'
+                backgroundColor='transparent'
+                iconStyle={{marginRight:0}}
+                style={{marginHorizontal:5, padding:0}}
+                onPress={this._playNext.bind(this)}
+              />
+              <Icon.Button
+                name="ios-list"
+                size={25}
+                color='black'
+                backgroundColor='transparent'
+                iconStyle={{marginRight:0}}
+                style={{marginHorizontal:5, padding:0}}
+                onPress={() => Actions.playlist()}
+              />
             </View>
             <View style={{flexDirection:'row', justifyContent: 'space-between', alignItems: 'center'}}>
-              <TouchableOpacity onPress={() => console.log("share")}>
-                {share}
-              </TouchableOpacity>
               <TouchableHighlight underlayColor='transparent' onPress={this._onChangeShuffleMode.bind(this)}>
                 <View style={player.shuffle !== 'none' ? {backgroundColor:'gray', borderRadius:5}: null}>
-                  <Icon name="ios-shuffle" size={20} style={styles.icon}/>
+                  <Icon name="ios-shuffle" size={20} color='black' style={styles.icon}/>
                 </View>
               </TouchableHighlight>
               <TouchableHighlight underlayColor='transparent' onPress={this._onChangeRepeatMode.bind(this)}>
                 <View style={player.repeat !== 'none' ? {backgroundColor:'gray', borderRadius:5} : null}>
-                  <Icon name="ios-repeat" size={20} style={styles.icon}/>
+                  <Icon name="ios-repeat" size={20} color='black' style={styles.icon}/>
                   { player.repeat === 'single' ? (<Text style={{position: 'absolute', right:5, top:3, fontSize:5}}>1</Text>) : null }
                 </View>
               </TouchableHighlight>
-              <TouchableOpacity onPress={() => this.refs.bottomsheet.open()}>
-                {more}
-              </TouchableOpacity>
             </View>
           </View>
         </View>
 
-        <TouchableHighlight style={{position: 'absolute', top:5, left:5}} onPress={() => Actions.pop()}>
+        <TouchableHighlight style={{position: 'absolute', top:5, left:5, padding:5}} underlayColor='transparent' onPress={() => Actions.pop()}>
           <Icon name="ios-arrow-down" color='black' size={30}/>
         </TouchableHighlight>
       </View>
@@ -246,6 +258,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  trackInfo: {
+    flex:2,
+    alignSelf:'stretch',
+    alignItems:'center',
+    justifyContent:'center',
+    backgroundColor:'white',
   },
   playerControls: {
     flex:1,
