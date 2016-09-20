@@ -7,6 +7,8 @@ import {
   TouchableHighlight,
   DeviceEventEmitter,
   TouchableWithoutFeedback,
+  Dimensions,
+  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import RCTPlayer from 'react-native-player';
@@ -18,6 +20,7 @@ import { CHANGE_TYPES, PLAY_STATUS } from '../constants/constants';
 import { convertMsToTime, convertSecToTime } from './utils';
 import PlayerTabBar from './PlayerTabBar';
 import CoverView from '../components/CoverView';
+import BottomSheet from '../components/BottomSheet';
 
 const playIcon = (<Icon name="ios-play" size={50} />);
 const pauseIcon = (<Icon name="ios-pause" size={50} />);
@@ -28,13 +31,13 @@ const share = (<Icon name="ios-share-outline" size={20} />);
 const more = (<Icon name="ios-more" size={20} />);
 const playlist = (<Icon name="ios-list" size={20} />);
 
+const screen = Dimensions.get('window');
+
 class Player extends Component {
   static propTypes = {
     trackInfo: React.PropTypes.object,
     tracks: React.PropTypes.array,
     currentTrackIndex: React.PropTypes.number,
-    repeat: React.PropTypes.string,
-    shuffle: React.PropTypes.string,
     autoplay: React.PropTypes.bool,
     startPosition: React.PropTypes.number,
   }
@@ -43,8 +46,6 @@ class Player extends Component {
     trackInfo: {},
     currentTrackIndex: null,
     tracks: [],
-    repeat: 'none',
-    shuffle: 'none',
     autoplay: true,
     startPosition: 0,
   }
@@ -58,13 +59,10 @@ class Player extends Component {
       strCurrentTime: convertSecToTime(props.startPosition),
       currentTime: props.startPosition,
       showCover: true,
+      showModal: false,
     }
 
-    this._onPlayerStateChanged = this._onPlayerStateChanged.bind(this);
     this._onUpdatePosition = this._onUpdatePosition.bind(this);
-  }
-
-  _onPlayerStateChanged(event) {
   }
 
   _onUpdatePosition(event) {
@@ -76,10 +74,7 @@ class Player extends Component {
     });
   }
 
-
-
   componentDidMount() {
-    DeviceEventEmitter.addListener('onPlayerStateChanged', this._onPlayerStateChanged);
     DeviceEventEmitter.addListener('onUpdatePosition', this._onUpdatePosition);
     
     if (this.props.autoplay) {
@@ -94,7 +89,6 @@ class Player extends Component {
   }
 
   componentWillUnmount() {
-    DeviceEventEmitter.removeListener('onPlayerStateChanged', this._onPlayerStateChanged);
     DeviceEventEmitter.removeListener('onUpdatePosition', this._onUpdatePosition);
   }
 
@@ -128,8 +122,8 @@ class Player extends Component {
   }
 
   _onChangeRepeatMode() {
-    let mode = this.props.repeat;
-    switch(this.props.repeat) {
+    let mode = this.props.player.repeat;
+    switch(mode) {
       case 'none':
         mode = 'all';
         break;
@@ -147,7 +141,7 @@ class Player extends Component {
   }
 
   _onChangeShuffleMode() {
-    this.props.actions.changeShuffleMode(this.props.shuffle === 'shuffle' ? 'none' : 'shuffle');
+    this.props.actions.changeShuffleMode(this.props.player.shuffle === 'shuffle' ? 'none' : 'shuffle');
   }
 
   render() {
@@ -155,6 +149,17 @@ class Player extends Component {
 
     return (
       <View style={styles.container}>
+        <BottomSheet
+          ref='bottomsheet'
+          animationType='slide'
+          transparent={true}
+          visible={false}
+          onRequestClose={() => console.log("hahaha")}
+        >
+          <BottomSheet.Item onPress={() => console.log("Like pressed...")} text='Like' iconName='ios-heart'/>
+          <BottomSheet.Item onPress={() => console.log("Share pressed...")} text='Share' iconName='ios-share-outline'/>
+        </BottomSheet>
+
         <View style={{flex:2, alignSelf:'stretch', alignItems:'center', justifyContent:'center', backgroundColor:'white'}}>
           <CoverView 
             showCover={this.state.showCover} 
@@ -211,17 +216,17 @@ class Player extends Component {
                 {share}
               </TouchableOpacity>
               <TouchableHighlight underlayColor='transparent' onPress={this._onChangeShuffleMode.bind(this)}>
-                <View style={this.props.shuffle !== 'none' ? {backgroundColor:'gray', borderRadius:5}: null}>
+                <View style={player.shuffle !== 'none' ? {backgroundColor:'gray', borderRadius:5}: null}>
                   <Icon name="ios-shuffle" size={20} style={styles.icon}/>
                 </View>
               </TouchableHighlight>
               <TouchableHighlight underlayColor='transparent' onPress={this._onChangeRepeatMode.bind(this)}>
-                <View style={this.props.repeat !== 'none' ? {backgroundColor:'gray', borderRadius:5} : null}>
+                <View style={player.repeat !== 'none' ? {backgroundColor:'gray', borderRadius:5} : null}>
                   <Icon name="ios-repeat" size={20} style={styles.icon}/>
-                  { this.props.repeat === 'single' ? (<Text style={{position: 'absolute', right:5, top:3, fontSize:5}}>1</Text>) : null }
+                  { player.repeat === 'single' ? (<Text style={{position: 'absolute', right:5, top:3, fontSize:5}}>1</Text>) : null }
                 </View>
               </TouchableHighlight>
-              <TouchableOpacity onPress={() => console.log("more")}>
+              <TouchableOpacity onPress={() => this.refs.bottomsheet.open()}>
                 {more}
               </TouchableOpacity>
             </View>
@@ -264,4 +269,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Player;
+module.exports = Player;
