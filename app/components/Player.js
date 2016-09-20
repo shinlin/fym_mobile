@@ -76,10 +76,12 @@ class Player extends Component {
     });
   }
 
+
+
   componentDidMount() {
     DeviceEventEmitter.addListener('onPlayerStateChanged', this._onPlayerStateChanged);
     DeviceEventEmitter.addListener('onUpdatePosition', this._onUpdatePosition);
-
+    
     if (this.props.autoplay) {
       if (this.props.player.status === PLAY_STATUS.PLAYING) {
         RCTPlayer.stop();

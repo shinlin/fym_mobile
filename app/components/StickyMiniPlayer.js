@@ -29,16 +29,19 @@ class StickyMiniPlayer extends Component {
 
     this._onPlayerStateChanged = this._onPlayerStateChanged.bind(this);
     this._onUpdatePosition = this._onUpdatePosition.bind(this);
+    this._onRemoteControl = this._onRemoteControl.bind(this);
   }
 
   componentDidMount() {
     DeviceEventEmitter.addListener('onPlayerStateChanged', this._onPlayerStateChanged);
     DeviceEventEmitter.addListener('onUpdatePosition', this._onUpdatePosition);
+    DeviceEventEmitter.addListener('onRemoteControl', this._onRemoteControl);
   }
 
   componentWillUnmount() {
     DeviceEventEmitter.removeListener('onPlayerStateChanged', this._onPlayerStateChanged);
     DeviceEventEmitter.removeListener('onUpdatePosition', this._onUpdatePosition);
+    DeviceEventEmitter.removeListener('onRemoteControl', this._onRemoteControl);
   }
 
   componentWillReceiveProps(nextProps: object) {
@@ -86,6 +89,13 @@ class StickyMiniPlayer extends Component {
     });
   }
   
+  _onRemoteControl(event) {
+    if (event.action === 'NEXT') {
+      this.props.actions.changeTrack(CHANGE_TYPES.NEXT);
+    } else {
+      this.props.actions.changeTrack(CHANGE_TYPES.PREV);
+    }
+  }
 
   _onPlayPause() {
     const { player, playlist, actions } = this.props;
