@@ -24,7 +24,7 @@ class StickyMiniPlayer extends Component {
 
     this.state = {
       currentTime: 0,
-      duration: 0,      
+      duration: 0,
     }
 
     this._onPlayerStateChanged = this._onPlayerStateChanged.bind(this);
@@ -48,11 +48,11 @@ class StickyMiniPlayer extends Component {
     if (this.props.player.currentTrackIndex !== nextProps.player.currentTrackIndex) {
       if (this.props.player.status === PLAY_STATUS.INIT) {
           this.props.actions.changePlayerStatus(PLAY_STATUS.PLAYING);
-          RCTPlayer.prepare(nextProps.trackInfo.stream_url, true);        
+          RCTPlayer.prepare(nextProps.trackInfo.stream_url, true);
       } else {
           RCTPlayer.stop();
           this.props.actions.changePlayerStatus(PLAY_STATUS.PLAYING);
-          RCTPlayer.prepare(nextProps.trackInfo.stream_url, true);        
+          RCTPlayer.prepare(nextProps.trackInfo.stream_url, true);
       }
     }
   }
@@ -127,7 +127,7 @@ class StickyMiniPlayer extends Component {
     return (
       <View style={[styles.container, style]}>
         <View style={styles.controls}>
-          <TouchableHighlight style={{flex:1}} onPress={() => this._onPlayer()} disabled={trackInfo === null ? true : false}>
+          <TouchableHighlight style={{flex:1}} underlayColor='transparent' onPress={() => this._onPlayer()} disabled={trackInfo === null ? true : false}>
             <View style={{flexDirection:'row', alignItems:'center'}}>
               { trackInfo ? 
                 <Image style={styles.thumbnail} source={{uri:trackInfo.artwork_url}} /> 
@@ -144,10 +144,10 @@ class StickyMiniPlayer extends Component {
           </TouchableHighlight>
           
           <View style={{flexDirection:'row', right: 0}}>
-            <TouchableHighlight style={{marginHorizontal:10}} onPress={this._onPlayPause.bind(this)} disabled={trackInfo === null ? true : false}>
+            <TouchableHighlight style={{marginHorizontal:10}} underlayColor='tranparent' onPress={this._onPlayPause.bind(this)} disabled={trackInfo === null ? true : false}>
               <Icon name={player.status === PLAY_STATUS.PLAYING ? 'ios-pause' : 'ios-play'} size={40} color={trackInfo ? 'black' : 'gray'}/>
             </TouchableHighlight>
-            <TouchableHighlight style={{marginHorizontal:10}} onPress={() => Actions.playlist()} disabled={trackInfo === null ? true : false}>
+            <TouchableHighlight style={{marginHorizontal:10}} underlayColor='tranparent' onPress={() => Actions.playlist()} disabled={trackInfo === null ? true : false}>
               <Icon name='ios-list' size={40} color={trackInfo ? 'black' : 'gray'}/>
             </TouchableHighlight>
           </View>
