@@ -4,7 +4,7 @@ import {
   View,
   ActivityIndicator,
 } from 'react-native';
-import { Scene, Router, TabBar, Actions } from 'react-native-router-flux'
+import { Scene, Router, TabBar, Actions, Switch } from 'react-native-router-flux'
 
 import FBSDK from 'react-native-fbsdk';
 const { 
@@ -58,58 +58,55 @@ class App extends Component {
     this.props.actions.loadPlaylist();
     this.props.actions.getUserInfo();
   }
-  
-  _renderPreInit() {
+
+  render() {
     return (
-      <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-        <ActivityIndicator
-          style={styles.centering}
-          size="large"
-        />
-      </View>
-    )
-  }
-
-  _renderPostInit() {
-    let isLoggedIn = this.props.loginStatus === LOGIN_STATUS.LOGIN ? true : false; 
-
-    return(
       <Router getSceneStyle={getSceneStyle}>
-        <Scene key="root">
-          <Scene key='login' title='Login' component={LoginContainer} hideNavBar direction='vertical' initial={isLoggedIn}/>
-          <Scene key='main' component={MainContainer} hideNavBar initial={isLoggedIn}>
-            <Scene key='explore' tabs={true} tabBarStyle={{backgroundColor:'black'}} pressOpacity={0.9}>
-              <Scene key='home' icon={TabIcon} activeIcon='home' inactiveIcon='home'>
-                <Scene key='tab_home' component={HomeContainer} hideNavBar/>
-              </Scene>
-              <Scene key='search' icon={TabIcon} activeIcon='magnifying-glass' inactiveIcon='magnifying-glass'>
-                <Scene key='tab_search' component={SearchContainer} hideNavBar/>
-              </Scene>
-              <Scene key='publish' icon={TabIcon} activeIcon='upload' inactiveIcon='upload' >
-                <Scene key='tab_publish' component={PublishContainer} hideNavBar/>
-              </Scene>
-              <Scene key='activity' icon={TabIcon} activeIcon='heart' inactiveIcon='heart'>
-                <Scene key='tab_activity' component={ActivityContainer} hideNavBar/>
-              </Scene>
-              <Scene key='user' icon={TabIcon} activeIcon='torso' inactiveIcon='torso'>
-                <Scene key='tab_user' component={UserContainer} hideNavBar/>
+        <Scene
+          key="root"
+          component={connect(state => ({loginStatus: state.userInfo.loginStatus}))(Switch)}
+          tabs={true}
+          unmountScenes
+          selector={(props) => {
+            switch(props.loginStatus) {
+              case LOGIN_STATUS.LOGIN: return "main";
+              case LOGIN_STATUS.LOGOUT: return "auth";
+              default: return "loading";
+            }
+          }}
+        >
+          <Scene key="loading" component={() => (
+            <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+              <ActivityIndicator
+                style={styles.centering}
+                size="large"
+              />
+            </View>            
+          )} hideNavBar/>
+          <Scene key="auth">
+            <Scene key='login' title='Login' component={LoginContainer} hideNavBar/>
+          </Scene>
+          <Scene key="main">
+            <Scene key='explore' component={MainContainer} hideNavBar initial={true}>
+              <Scene key='tabs' tabs={true} tabBarStyle={{backgroundColor:'black'}} pressOpacity={0.9}>
+                <Scene key='home' icon={TabIcon} activeIcon='home' inactiveIcon='home' component={HomeContainer} hideNavBar/>
+                <Scene key='search' icon={TabIcon} activeIcon='magnifying-glass' inactiveIcon='magnifying-glass' component={SearchContainer} hideNavBar/>
+                <Scene key='publish' icon={TabIcon} activeIcon='upload' inactiveIcon='upload' component={PublishContainer} hideNavBar/>
+                <Scene key='activity' icon={TabIcon} activeIcon='heart' inactiveIcon='heart' component={ActivityContainer} hideNavBar/>
+                <Scene key='user' icon={TabIcon} activeIcon='torso' inactiveIcon='torso' component={UserContainer} hideNavBar/>
               </Scene>
             </Scene>
-          </Scene>
 
-          <Scene key='player' component={PlayerContainer} hideNavBar direction='vertical'/>
-          <Scene key='parallax' component={ParallaxView}/>
-          <Scene key='playlist' component={PlaylistContainer} hideNavBar={false}/>
-          <Scene key='bugreport' component={BugReportView} hideNavBar/>
-          <Scene key='settings' title='Settings' component={SettingsView} hideNavBar={false}/>
-          <Scene key='artist' title='Artist' component={ArtistView} hideNavBar={false}/>
+            <Scene key='player' component={PlayerContainer} hideNavBar direction='vertical'/>
+            <Scene key='parallax' component={ParallaxView}/>
+            <Scene key='playlist' component={PlaylistContainer} hideNavBar={false}/>
+            <Scene key='bugreport' component={BugReportView} hideNavBar/>
+            <Scene key='settings' title='Settings' component={SettingsView} hideNavBar={false}/>
+            <Scene key='artist' title='Artist' component={ArtistView} hideNavBar={false}/>
+          </Scene>
         </Scene>
       </Router>
     )
-  }
-
-  render() {
-    return this.props.loginStatus === LOGIN_STATUS.READY ? this._renderPreInit() : this._renderPostInit();
   }
 }
 
@@ -138,3 +135,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
+

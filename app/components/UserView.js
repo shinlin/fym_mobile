@@ -27,13 +27,8 @@ export default class UserView extends Component {
     super(props);
   }
 
-  _logout() {
-    console.log(this.props);
-    this.props.logoutRequest();
-  }
-  
   render() {
-    const { userInfo } = this.props;
+    const { userInfo, actions } = this.props;
     const { info } = userInfo; 
 
     return (
@@ -45,10 +40,10 @@ export default class UserView extends Component {
           <View style={{flexDirection:'row', alignItems:'center', backgroundColor:'white'}}>
             <Image
               style={{width:64, height:64, margin:10}}
-              source={{uri:'https://unsplash.it/64/64'}}
+              source={{uri:info.avatar_url}}
             />
             <View style={{flex:1}}>
-              <Text style={{fontSize:14, color:'black'}}>Hunkyo Jung</Text>
+              <Text style={{fontSize:14, color:'black'}}>{info.username}</Text>
               <Text style={{fontSize:12, color:'tomato'}}>View profile</Text>
             </View>
           </View>
@@ -75,7 +70,7 @@ export default class UserView extends Component {
           </TouchableHighlight>  
         </View>
 
-        <TouchableHighlight onPress={() => Actions.settings()}>
+        <TouchableHighlight onPress={() => Actions.settings({actions: actions})}>
           <View style={{flexDirection:'row', backgroundColor:'white', height:50, alignItems:'center', justifyContent: 'space-between', paddingHorizontal:10, borderTopWidth:0.5, borderColor:'gray'}}>
             <Text style={styles.itemText}>Settings</Text>
             <Icon name='ios-arrow-forward' size={25}/>
