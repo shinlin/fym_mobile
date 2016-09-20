@@ -62,6 +62,7 @@ class Player extends Component {
 
     this._onPlayerStateChanged = this._onPlayerStateChanged.bind(this);
     this._onUpdatePosition = this._onUpdatePosition.bind(this);
+    this._onRemoteControl = this._onRemoteControl.bind(this);
   }
 
   _onPlayerStateChanged(event) {
@@ -76,9 +77,18 @@ class Player extends Component {
     });
   }
 
+  _onRemoteControl(event) {
+    if (event.action === 'NEXT') {
+      this.props.actions.changeTrack(CHANGE_TYPES.NEXT);
+    } else {
+      this.props.actions.changeTrack(CHANGE_TYPES.PREV);
+    }
+  }
+
   componentDidMount() {
     DeviceEventEmitter.addListener('onPlayerStateChanged', this._onPlayerStateChanged);
     DeviceEventEmitter.addListener('onUpdatePosition', this._onUpdatePosition);
+    DeviceEventEmitter.addListener('onRemoteControl', this._onRemoteControl);
 
     if (this.props.autoplay) {
       if (this.props.player.status === PLAY_STATUS.PLAYING) {
