@@ -3,12 +3,11 @@ import {
   StyleSheet,
   View,
   Text,
-  ListView,
-  Image,
-  RefreshControl,
+  ScrollView,
+  TouchableHighlight
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/Foundation';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 class SettingsView extends Component {
 
@@ -20,61 +19,48 @@ class SettingsView extends Component {
   }
   
   render() {
+    const { actions } = this.props;
+
     return(
-      <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-        <Text>Settings View</Text>
-      </View>
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+      >
+        <TouchableHighlight onPress={() => console.log("Show following....")}>
+          <View style={{flexDirection:'row', backgroundColor:'white', height:50, alignItems:'center', justifyContent: 'space-between', paddingHorizontal:10, borderTopWidth:0.5, borderColor:'gray'}}>
+            <Text style={styles.itemText}>Notification</Text>
+            <Icon name='ios-arrow-forward' size={25}/>
+          </View>
+        </TouchableHighlight>  
+        <TouchableHighlight onPress={() => console.log("Show following....")}>
+          <View style={{flexDirection:'row', backgroundColor:'white', height:50, alignItems:'center', justifyContent: 'space-between', paddingHorizontal:10, borderTopWidth:0.5, borderColor:'gray'}}>
+            <Text style={styles.itemText}>Send app feedback</Text>
+            <Icon name='ios-arrow-forward' size={25}/>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={() => actions.logoutRequest()}>
+          <View style={{flexDirection:'row', backgroundColor:'white', height:50, alignItems:'center', justifyContent: 'space-between', paddingHorizontal:10, borderTopWidth:0.5, borderBottomWidth:0.5, borderColor:'gray'}}>
+            <Text style={styles.itemText}>Logout</Text>
+          </View>
+        </TouchableHighlight>  
+      </ScrollView>
     )
   }
 }
 
+
 const styles = StyleSheet.create({
-  list: {
+  container: {
+    backgroundColor: 'whitesmoke',
+    paddingTop: 60,
   },
   contentContainer: {
-    paddingBottom: 50 + 64,
 
   },
-  rowContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  imageContainer: {
-    alignItems:'center',
-    justifyContent:'center',
-    margin: 5,
-  },
-  textContainer: {
-    flex:1,
-    margin: 5,
-  },
-  image: {
-    width:48,
-    height:48,
-    borderRadius: 24,
-  },
-  icon: {
-    width:20,
-    height:20,
-    position: 'absolute',
-    right:0,
-    bottom:0,
-    justifyContent:'center',
-    alignItems:'center',
-    borderWidth:0.5,
-    borderColor:'white',
-    borderRadius:10,    
-  },
-  separator: {
-    height: 0.5,
-    alignSelf: 'stretch',
-    backgroundColor: 'darkgray',
-  },
-  anchorText: {
-   textDecorationLine:'underline',
-   color:'black',
+  itemText: {
+    fontSize:15,
+    color:'black',
   }
-});
+})
 
 export default SettingsView;

@@ -14,7 +14,7 @@ class UserContainer extends Component {
 
     const { userInfo, actions } = this.props;
     return (
-      <UserView userInfo={userInfo} {...actions}/>
+      <UserView userInfo={userInfo} actions={actions}/>
     )
   }
 }

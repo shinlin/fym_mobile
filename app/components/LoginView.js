@@ -33,7 +33,7 @@ export default class LoginView extends Component {
           </View>
         </TouchableHighlight>
 
-        <Text onPress={() => Actions.main({type:ActionConst.REPLACE})}>Continue without signing in</Text>
+        <Text onPress={() => Actions.explore()}>Continue without signing in</Text>
       </View>
     )
   }
