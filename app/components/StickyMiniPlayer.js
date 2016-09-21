@@ -6,6 +6,7 @@ import {
   Image,
   TouchableHighlight,
   DeviceEventEmitter,
+  NativeModules,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import RCTPlayer from 'react-native-player';
@@ -58,7 +59,13 @@ class StickyMiniPlayer extends Component {
   }
 
   _onPlayerStateChanged(event) {
+    var ReactAudio = NativeModules.ReactAudio;
+
     if(event.playbackState === 4) { // READY
+      const { player, playlist } = this.props;
+      let trackInfo = playlist.tracks[player.currentTrackIndex];
+      let artwork_url = trackInfo.artwork_url.replace('badge', 't300x300');
+      ReactAudio.songInfo(trackInfo.rap_name, trackInfo.title, artwork_url);
       RCTPlayer.getDuration(duration => this.setState({duration: parseInt(duration/60)}));
     } else if(event.playbackState === 5) { // ENDED
       if(this.props.player.shuffle === 'shuffle') {
