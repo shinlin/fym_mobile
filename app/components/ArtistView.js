@@ -1,80 +1,91 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  ListView,
   Image,
-  RefreshControl,
+  TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
+import { Actions } from 'react-native-router-flux'
+import Icon from 'react-native-vector-icons/Ionicons';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 
-import Icon from 'react-native-vector-icons/Foundation';
+import PlayerTabBar from './PlayerTabBar';
+import TrackList from './TrackList';
 
 class ArtistView extends Component {
 
-  constructor(props) {
-    super(props);
+  static propTypes = {
+    userInfo: React.PropTypes.object.isRequired,
   }
 
-  componentDidMount() {
+  static defaultProps = {
   }
-  
+
   render() {
-    return(
-      <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-        <Text>Artist View</Text>
+    const { userInfo, actions } = this.props;
+    const { user, songs }  = userInfo;
+
+    return (
+      <View style={{flex:1, marginTop:54}}>
+        <View style={{margin:10}}>
+          <View style={{flexDirection:'row', alignItems:'center', backgroundColor:'white'}}>
+            <Image
+              style={{width:64, height:64, borderRadius:32}}
+              source={{uri:user.avatar_url}}
+            />
+            <View style={{flex:1, marginLeft:20}}>
+              <Text style={{fontSize:14, color:'black'}}>{user.username}</Text>
+              <Text style={{fontSize:12, color:'gray'}}>{user.rap_name}</Text>
+            </View>
+          </View>
+          <View style={{flexDirection:'row', marginTop:10}}>
+            <TouchableWithoutFeedback onPress={() => console.log('Following...')}>
+              <View style={{marginRight:15}}>
+                <Text style={{fontSize:10}}>{user.favorite_artists.length}</Text>
+                <Text style={{fontSize:10}}>Following</Text>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => console.log('Follower...')}>
+              <View>
+                <Text style={{fontSize:10}}>{user.followers.length}</Text>
+                <Text style={{fontSize:10}}>Followers</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </View>
+        <ScrollableTabView 
+          renderTabBar={() => (
+            <PlayerTabBar 
+              inactiveTextColor='gray'
+              activeTextColor='black'
+              textStyle={{fontSize:12}}
+              containerStyle={{borderTopWidth:0.5, borderTopColor: 'lightgray', height:30}}
+            />
+          )}
+          initialPage={0}
+        >
+          <TrackList tabLabel="Posted Tracks" tracks={songs}/>
+          <TrackList tabLabel="Liked Tracks" tracks={user.my_likes}/>
+        </ScrollableTabView>
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  list: {
+  container: {
+    marginTop: 50,
+    backgroundColor: 'whitesmoke',
   },
   contentContainer: {
-    paddingBottom: 50 + 64,
 
   },
-  rowContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  imageContainer: {
-    alignItems:'center',
-    justifyContent:'center',
-    margin: 5,
-  },
-  textContainer: {
-    flex:1,
-    margin: 5,
-  },
-  image: {
-    width:48,
-    height:48,
-    borderRadius: 24,
-  },
-  icon: {
-    width:20,
-    height:20,
-    position: 'absolute',
-    right:0,
-    bottom:0,
-    justifyContent:'center',
-    alignItems:'center',
-    borderWidth:0.5,
-    borderColor:'white',
-    borderRadius:10,    
-  },
-  separator: {
-    height: 0.5,
-    alignSelf: 'stretch',
-    backgroundColor: 'darkgray',
-  },
-  anchorText: {
-   textDecorationLine:'underline',
-   color:'black',
+  itemText: {
+    fontSize:15,
+    color:'black',
   }
-});
+})
 
-export default ArtistView;
+module.exports = ArtistView;

@@ -26,10 +26,14 @@ class BottomSheet extends Component {
 
   state = {
     showModal: this.props.visible,
+    data: null,
   }
 
-  open() {
-    this.setState({showModal: true});
+  open(data: object) {
+    this.setState({
+      showModal: true,
+      data: data
+    });
   }
 
   close() {
@@ -51,7 +55,10 @@ class BottomSheet extends Component {
         <View style={[styles.container,{width:screen.width, height:containerHeight}]}>
           <View style={{flex:1}}>
             {React.Children.map(this.props.children, (child) => {
-              return React.cloneElement(child, { itemHeight: itemHeight })
+              return React.cloneElement(child, { 
+                itemHeight: itemHeight,
+                data: this.state.data,
+              })
             })}
           </View>
           <View style={styles.cancelBox}>
@@ -72,7 +79,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     bottom: 0,
-    backgroundColor: 'white',
+    backgroundColor: 'whitesmoke',
   },
   cancelBox: {
     position: 'absolute',

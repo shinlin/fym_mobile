@@ -11,13 +11,12 @@ import {
   Platform,
 } from 'react-native';
 
-
-
 export default class PlayerTabBar extends Component {
   static propTypes = {
     goToPage: React.PropTypes.func,
     activeTab: React.PropTypes.number,
     tabs: React.PropTypes.array,
+    containerStyle: View.propTypes.style,
     textStyle: Text.propTypes.style,
     tabStyle: View.propTypes.style,
     activeBgColor: React.PropTypes.string,
@@ -27,8 +26,8 @@ export default class PlayerTabBar extends Component {
   }
 
   static defaultProps = {
-    activeTextColor: 'white',
-    inactiveTextColor: 'black',
+    activeTextColor: 'black',
+    inactiveTextColor: 'gray',
     activeBgColor: 'rgba(0, 0, 0, 0.5)',
     inactiveBgColor: 'rgba(255,255,255,0.5)',
   }
@@ -36,8 +35,8 @@ export default class PlayerTabBar extends Component {
   renderTabOption(name, page) {
     const isTabActive = this.props.activeTab === page;
     const { activeTextColor, inactiveTextColor, textStyle, activeBgColor, inactiveBgColor } = this.props;
+    const textColor = isTabActive ? activeTextColor : inactiveTextColor;
     const bgColor = isTabActive ? activeBgColor : inactiveBgColor;
-    const fontWeight = isTabActive ? 'bold' : 'normal';
 
     var TouchableElement = TouchableOpacity;
     if (Platform.OS === 'android') {
@@ -47,7 +46,7 @@ export default class PlayerTabBar extends Component {
     return (
       <TouchableElement key={name} onPress={() => this.props.goToPage(page)}>
         <View style={[styles.tab]}>
-          <Text style={[{color: 'black', fontSize:14, fontWeight:fontWeight}, textStyle, ]}>
+          <Text style={[styles.text, {color: textColor}, textStyle]}>
             {name}
           </Text>
         </View>
@@ -56,8 +55,10 @@ export default class PlayerTabBar extends Component {
   }
 
   render() {
+    const { containerStyle } = this.props;
+
     return (
-      <View style={{height:40, borderBottomColor:'gray', borderBottomWidth:0.5}}>
+      <View style={[styles.container, containerStyle]}>
         <ScrollView 
           contentContainerStyle={styles.tabs}
           horizontal={true}
@@ -71,6 +72,11 @@ export default class PlayerTabBar extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    height:40,
+    borderBottomColor: 'lightgray',
+    borderBottomWidth: 0.5,
+  },
   tab: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -78,8 +84,11 @@ const styles = StyleSheet.create({
     marginHorizontal:1,
   },
   tabs: {
-    padding: 8,
+//    padding: 8,
     flexDirection: 'row',
     justifyContent: 'center',
   },
+  text: {
+    fontSize: 12,
+  }
 });
