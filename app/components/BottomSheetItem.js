@@ -16,6 +16,7 @@ class BottomSheetItem extends Component {
     iconSize: React.PropTypes.number,
     iconColor: React.PropTypes.string,
     itemHeight: React.PropTypes.number,
+    data: React.PropTypes.object,
   }
 
   static defaultProps = {
@@ -23,10 +24,10 @@ class BottomSheetItem extends Component {
   }
 
   render() {
-    const { text, onPress, iconName, iconColor, iconSize, itemHeight } = this.props;
+    const { text, onPress, iconName, iconColor, iconSize, itemHeight, data } = this.props;
 
     return (
-      <TouchableHighlight underlayColor='lightgray' onPress={() => onPress()}>
+      <TouchableHighlight underlayColor='lightgray' onPress={() => onPress(data)}>
         <View style={[styles.container, { height: itemHeight }]}>
           <View style={styles.icon}>
             <Icon name={iconName} size={iconSize} color={iconColor}/>

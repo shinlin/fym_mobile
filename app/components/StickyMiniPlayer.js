@@ -144,10 +144,10 @@ class StickyMiniPlayer extends Component {
           </TouchableHighlight>
           
           <View style={{flexDirection:'row', right: 0}}>
-            <TouchableHighlight style={{marginHorizontal:10}} underlayColor='tranparent' onPress={this._onPlayPause.bind(this)} disabled={trackInfo === null ? true : false}>
+            <TouchableHighlight style={{marginHorizontal:10}} underlayColor='transparent' onPress={this._onPlayPause.bind(this)} disabled={trackInfo === null ? true : false}>
               <Icon name={player.status === PLAY_STATUS.PLAYING ? 'ios-pause' : 'ios-play'} size={40} color={trackInfo ? 'black' : 'gray'}/>
             </TouchableHighlight>
-            <TouchableHighlight style={{marginHorizontal:10}} underlayColor='tranparent' onPress={() => Actions.playlist()} disabled={trackInfo === null ? true : false}>
+            <TouchableHighlight style={{marginHorizontal:10}} underlayColor='transparent' onPress={() => Actions.playlist()} disabled={trackInfo === null ? true : false}>
               <Icon name='ios-list' size={40} color={trackInfo ? 'black' : 'gray'}/>
             </TouchableHighlight>
           </View>
@@ -155,7 +155,6 @@ class StickyMiniPlayer extends Component {
         <ProgressBar
           style={{height:4}}
           value={this.state.currentTime}
-          onValueChange={(value) => console.log(value)}
           minimumValue={0}
           maximumValue={this.state.duration}
           trackStyle={styles.trackStyle}

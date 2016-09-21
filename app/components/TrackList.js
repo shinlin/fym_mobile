@@ -11,45 +11,44 @@ import {
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import * as playlistActions from '../actions/playlist';
+
 import BottomSheet from './BottomSheet';
 
-export default class PopularTracks extends Component{
+class TrackList extends Component{
 
   static propTypes = {
-    isFetching: React.PropTypes.bool,
-    items: React.PropTypes.array,
-    error: React.PropTypes.string,
+    tracks: React.PropTypes.array.isRequired,
+    showRank: React.PropTypes.bool,
+    showMore: React.PropTypes.bool,
   }
 
   static defaultProps = {
-    isFetching: false,
-    items: [],
-    error: '',
+    showRank: false,
+    showMore: true,
   }
 
   constructor(props) {
     super(props);
 
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
     this.state = {
-      dataSource: ds.cloneWithRows([]),
+      dataSource: new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1 !== r2
+      }).cloneWithRows(props.tracks),
     }
   }
 
-  componentDidMount() {
-    this.props.fetchItems();
-  }
-  
-  componentWillReceiveProps(nextProps) {
-    this.setState({dataSource: this.state.dataSource.cloneWithRows(nextProps.items)});
-  }
-
   _playTrack(rowID) {
-    this.props.clearTracks();
-    this.props.addTracks(this.props.items, parseInt(rowID));
+    const { clearTracks, addTracks } = this.props.actions;
+  
+    clearTracks();
+    addTracks(this.props.tracks, parseInt(rowID));
+
     Actions.player();
-  }
+  }  
 
   _showMore(rowData: object) {
     this.refs.bottomsheet.open(rowData);
@@ -61,33 +60,47 @@ export default class PopularTracks extends Component{
     )
   }
 
+  _renderRank(rowID) {
+    return (
+      <View style={styles.rank}>
+        <Text style={styles.title}>{parseInt(rowID)+1}</Text>
+      </View>
+    )
+  }
+
+  _renderMoreButton(rowData) {
+    return (
+      <TouchableHighlight 
+        underlayColor='transparent' 
+        onPress={() => this._showMore(rowData)}>
+        <Icon name="ios-more" size={20} style={{marginHorizontal:5}}/>
+      </TouchableHighlight>      
+    )
+  }
+
   _renderRow(rowData, sectionID, rowID) {
     const { title, rap_name, artwork_url } = rowData;
 
     return (
       <View style={styles.rowContainer}>
-        <TouchableHighlight style={{flex:1}} underlayColor='transparent' onPress={this._playTrack.bind(this, rowID)}>
+        <TouchableHighlight style={{flex:1}} underlayColor='transparent' onPress={() => this._playTrack(rowID)}>
           <View style={styles.rowSubContainer}>
-            <View style={styles.rank}>
-              <Text style={styles.title}>{Number(rowID)+1}</Text>
-            </View>
             <Image style={styles.thumbnail} source={{uri:artwork_url}}/>
+            {this.props.showRank && this._renderRank(rowID)}
             <View style={styles.textContainer}>
               <Text numberOfLines ={1} style={styles.title}>{title}</Text>
               <Text style={styles.subtitle}>{rap_name}</Text>
             </View>
           </View>
         </TouchableHighlight>
-        <TouchableHighlight style={{right:10}} underlayColor='transparent' onPress={this._showMore.bind(this, rowData)}>
-          <Icon name="ios-more" size={20}/>
-        </TouchableHighlight>
+        {this.props.showMore && this._renderMoreButton(rowData)}
       </View>
     )
   }
 
-  _renderList() {
-    return (
-      <View style={{flex:1, alignSelf:'stretch'}}>
+  render() {
+    return(
+      <View style={styles.container}>
         <BottomSheet
           ref='bottomsheet'
           animationType='fade'
@@ -101,7 +114,7 @@ export default class PopularTracks extends Component{
             .then(response => response.json())
             .then(json => {
               this.refs.bottomsheet.close();
-              Actions.artist({userInfo: json});
+              Actions.artist({userInfo: json})
             })
             .catch(error => console.warn(error));
           }}/>
@@ -120,23 +133,6 @@ export default class PopularTracks extends Component{
       </View>
     )
   }
-
-  _renderAcivityIndicator() {
-    return(
-      <ActivityIndicator
-        style={styles.centering}
-        size="large"
-      />
-    )
-  }
-
-  render() {
-    return(
-      <View style={styles.container}>
-        { this.props.isFetching ? this._renderAcivityIndicator() : this._renderList() }
-      </View>
-    )
-  }
 }
 
 const styles = StyleSheet.create({
@@ -144,13 +140,16 @@ const styles = StyleSheet.create({
     flex:1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 50,
+    backgroundColor: 'white',
   },
   rowContainer: {
     flex: 1,
     flexDirection: 'row',
     paddingVertical: 5,
     alignItems: 'center',
+    backgroundColor: 'white',
+    justifyContent: 'space-between',
+    
   },
   rowSubContainer: {
     flexDirection: 'row',
@@ -159,18 +158,22 @@ const styles = StyleSheet.create({
   thumbnail: {
     width: 48,
     height: 48,
+    borderRadius: 2,
+    borderWidth: 0.5,
+    borderColor: 'gray',
+    marginRight: 5,
   },
   textContainer: {
     flex: 1,
     justifyContent: 'space-between',
-    margin: 8,
+    marginHorizontal: 5,
   },
   list: {
-    // flex:1,
-    // alignSelf: 'stretch'
+    alignSelf: 'stretch'
   },
   contentContainer: {
 //    flex:1,
+    paddingHorizontal: 5
   },
   title: {
     fontSize: 12,
@@ -186,8 +189,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'darkgray',
   },
   rank: {
-    width: 30,
+    width: 20,
     justifyContent: 'center',
     alignItems: 'center',
   }
 });
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    actions: bindActionCreators(playlistActions, dispatch),
+  }
+}
+
+module.exports = connect(null, mapDispatchToProps)(TrackList);

@@ -25,7 +25,6 @@ class ActivityView extends Component {
 
   componentDidMount() {
     var activities = require('../../assets/mock_activity.json').activities;
-    console.log(activities);
     this.setState({dataSource: this.state.dataSource.cloneWithRows(activities)});
   }
   
